@@ -1,0 +1,1111 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>[hidden]{display:none!important}body{margin:0}</style></head><body><title>Six-Pack Practice</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: chart-table app. Sticky header with nav, single centered column of cards; bottom tab bar on phones. */
+:root{
+  --paper:#F2F6F8; --surface:#FFFFFF; --surface-2:#E8EFF3; --ink:#0F2433; --muted:#566977; --line:#D3DEE5;
+  --water:#D6E8F1; --land:#EADDB9; --accent:#D2470F; --accent-soft:#FBE3D6; --on-accent:#FFFFFF;
+  --good:#17784A; --good-soft:#DDF2E6; --bad:#B8322A; --bad-soft:#F9E0DD;
+  --port:#D02B2B; --stbd:#11884A; --chart:#1F5D86;
+  --m100:#C2410C; --m170:#A16207; --m171:#0F7A5A; --m172:#1D5F8C;
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0A141C; --surface:#11202B; --surface-2:#172B38; --ink:#E3ECF1; --muted:#93A7B4; --line:#24394A;
+  --water:#123247; --land:#3A3425; --accent:#FF7A3D; --accent-soft:#3A1E10; --on-accent:#1A0B03;
+  --good:#4CC98A; --good-soft:#0F3122; --bad:#FF7A70; --bad-soft:#3B1613;
+  --port:#FF5A55; --stbd:#3FD08A; --chart:#6CB4E4;
+  --m100:#FF8A50; --m170:#E8B34A; --m171:#45C99B; --m172:#6CB4E4; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0A141C; --surface:#11202B; --surface-2:#172B38; --ink:#E3ECF1; --muted:#93A7B4; --line:#24394A;
+  --water:#123247; --land:#3A3425; --accent:#FF7A3D; --accent-soft:#3A1E10; --on-accent:#1A0B03;
+  --good:#4CC98A; --good-soft:#0F3122; --bad:#FF7A70; --bad-soft:#3B1613;
+  --port:#FF5A55; --stbd:#3FD08A; --chart:#6CB4E4;
+  --m100:#FF8A50; --m170:#E8B34A; --m171:#45C99B; --m172:#6CB4E4; color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{background:var(--paper)}
+body{color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+h1,h2,h3,h4{font-family:var(--display);font-weight:700;line-height:1.1;margin:0;text-wrap:balance;letter-spacing:.01em}
+h1{font-size:clamp(2rem,5vw,2.8rem)} h2{font-size:1.75rem} h3{font-size:1.3rem}
+p{margin:0}
+a{color:var(--chart)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--display);font-weight:600;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:20px;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);margin-right:auto}
+.brand svg{width:34px;height:34px;flex:none}
+.brand b{font-family:var(--display);font-size:1.35rem;letter-spacing:.02em;line-height:1}
+.brand small{display:block;font-size:.72rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.nav{display:flex;gap:4px}
+.nav a{display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--muted);font-weight:600;padding:8px 12px;border-radius:8px;font-size:.95rem}
+.nav a:hover{background:var(--surface-2);color:var(--ink)}
+.nav a.on{color:var(--ink);background:var(--surface-2)}
+.nav a svg{width:18px;height:18px}
+.tabbar{display:none}
+@media (max-width:720px){
+  .nav{display:none}
+  .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+  .tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px 6px;text-decoration:none;color:var(--muted);font-size:.72rem;font-weight:600}
+  .tabbar a.on{color:var(--accent)}
+  .tabbar svg{width:22px;height:22px}
+  main{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))!important}
+}
+
+main{max-width:1080px;margin:0 auto;padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:28px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.g3{grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:10px 16px;border-radius:8px;font-weight:600;cursor:pointer;text-decoration:none;min-height:44px}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.primary:hover{filter:brightness(1.05)}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--muted)}
+.btn.ghost:hover{color:var(--ink);background:var(--surface-2)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn svg{width:18px;height:18px}
+
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--muted);white-space:nowrap}
+.chip.mod{color:#fff}
+.mQ100{--mc:var(--m100)} .mQ170{--mc:var(--m170)} .mQ171{--mc:var(--m171)} .mQ172{--mc:var(--m172)}
+.chip.mod{background:var(--mc)}
+:root:not([data-theme="light"]) .chip.mod{color:var(--paper)}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .chip.mod{color:#fff}}
+:root[data-theme="light"] .chip.mod{color:#fff}
+
+.pick{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);padding:7px 12px;border-radius:999px;cursor:pointer;font-weight:600;font-size:.92rem;min-height:38px}
+.pick[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-wrap:wrap}
+.seg button{border:0;background:var(--surface);padding:8px 14px;cursor:pointer;font-weight:600;min-height:40px}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:24px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:28px;overflow:hidden;position:relative}
+.hero p.lead{font-size:1.1rem;color:var(--muted);max-width:52ch;margin-top:10px}
+.hero .actions{margin-top:20px}
+.hero-art{width:100%;max-width:360px;justify-self:center}
+@media (max-width:760px){.hero{grid-template-columns:1fr;padding:20px}.hero-art{max-width:260px;order:-1}}
+
+/* module cards */
+.modcard{display:flex;flex-direction:column;gap:12px;border-top:4px solid var(--mc)}
+.modcard .code{font-family:var(--display);font-weight:700;font-size:2rem;color:var(--mc);line-height:1}
+.meter{height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden;position:relative}
+.meter i{display:block;height:100%;background:var(--mc,var(--accent));border-radius:99px;transition:width .4s}
+.meter .mark{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);opacity:.55}
+.kv{display:flex;justify-content:space-between;gap:8px;font-size:.9rem;color:var(--muted)}
+.kv b{color:var(--ink);font-family:var(--mono);font-weight:500}
+
+/* lessons */
+.lesson-card{display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;border-left:4px solid var(--mc);transition:transform .15s,border-color .15s}
+.lesson-card:hover{transform:translateY(-2px)}
+.lesson-card h3{font-size:1.2rem}
+.lesson-card p{font-size:.93rem;color:var(--muted)}
+.lesson-card .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:.85rem;color:var(--muted)}
+.added{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--chart);border:1px solid currentColor;padding:1px 6px;border-radius:4px}
+.lesson-head{display:flex;flex-direction:column;gap:10px}
+.lesson-body{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:860px){.lesson-body{grid-template-columns:1fr}}
+.diagram{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px;overflow-x:auto}
+.diagram svg{display:block;width:100%;height:auto;min-width:300px}
+.core{background:var(--accent-soft);border-radius:var(--radius);padding:16px 18px}
+.core .eyebrow{color:var(--accent)}
+.points{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:8px}
+.points li{padding-left:2px}
+.points li::marker{color:var(--accent)}
+.mnemo{font-family:var(--display);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+
+/* quiz */
+.quiz{max-width:760px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.qtop{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.qtop .count{font-family:var(--mono);font-size:.9rem;color:var(--muted);margin-left:auto}
+.progress{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.qcard{display:flex;flex-direction:column;gap:18px}
+.stem{font-size:1.25rem;font-weight:600;line-height:1.35}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;align-items:flex-start;gap:12px;text-align:left;border:1.5px solid var(--line);background:var(--surface);padding:12px 14px;border-radius:10px;cursor:pointer;font-size:1.02rem;min-height:52px;transition:border-color .15s,background .15s}
+.opt:hover:not(:disabled){border-color:var(--muted)}
+.opt .k{flex:none;width:28px;height:28px;border-radius:7px;display:grid;place-items:center;font-family:var(--mono);font-size:.85rem;background:var(--surface-2);color:var(--muted)}
+.opt.sel{border-color:var(--ink);background:var(--surface-2)}
+.opt.sel .k{background:var(--ink);color:var(--paper)}
+.opt.right{border-color:var(--good);background:var(--good-soft)}
+.opt.right .k{background:var(--good);color:var(--surface)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt.wrong .k{background:var(--bad);color:var(--surface)}
+.opt:disabled{cursor:default}
+.feedback{border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.feedback.ok{background:var(--good-soft)} .feedback.no{background:var(--bad-soft)}
+.feedback b{font-family:var(--display);font-size:1.2rem;letter-spacing:.02em}
+.feedback.ok b{color:var(--good)} .feedback.no b{color:var(--bad)}
+.qnav{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap}
+.navgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:6px}
+.navgrid button{height:38px;border-radius:7px;border:1px solid var(--line);background:var(--surface);font-family:var(--mono);font-size:.8rem;cursor:pointer}
+.navgrid button.done{background:var(--surface-2);border-color:var(--muted)}
+.navgrid button.cur{outline:2px solid var(--accent);outline-offset:1px}
+.navgrid button.flag{box-shadow:inset 0 -3px 0 var(--accent)}
+.navgrid button.r{background:var(--good-soft);border-color:var(--good)}
+.navgrid button.w{background:var(--bad-soft);border-color:var(--bad)}
+.visual{border-radius:10px;overflow:hidden;background:var(--surface-2)}
+.visual svg{display:block;width:100%;height:auto;max-height:340px}
+.confirm{border:1.5px solid var(--accent);background:var(--accent-soft);border-radius:10px;padding:14px 16px}
+
+/* results */
+.score{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.ring{width:132px;height:132px;flex:none}
+.verdict{font-family:var(--display);font-size:2rem;font-weight:700}
+.verdict.pass{color:var(--good)} .verdict.fail{color:var(--bad)}
+.missed{display:flex;flex-direction:column;gap:10px}
+.missed .item{border-left:3px solid var(--bad);padding:4px 0 4px 12px;display:flex;flex-direction:column;gap:3px}
+.bars{display:flex;flex-direction:column;gap:10px}
+.bar-row{display:grid;grid-template-columns:minmax(0,170px) minmax(0,1fr) 52px;gap:10px;align-items:center;font-size:.92rem}
+.bar-row .meter{height:10px}
+
+/* drills */
+.drill{display:flex;flex-direction:column;gap:12px;text-decoration:none;color:inherit;padding:0;overflow:hidden;cursor:pointer;text-align:left}
+.drill .art{background:var(--surface-2);aspect-ratio:16/9;max-width:100%;display:grid;place-items:center;overflow:hidden}
+.drill .art svg{width:100%;height:100%;display:block}
+.drill .txt{padding:0 18px 18px;display:flex;flex-direction:column;gap:6px}
+.drill:hover h3{color:var(--accent)}
+
+/* widgets */
+.widget{display:flex;flex-direction:column;gap:14px}
+.ctrl{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr) 78px;gap:10px;align-items:center;font-size:.95rem}
+.ctrl label{font-weight:600}
+.ctrl output{font-family:var(--mono);text-align:right;font-size:.95rem}
+input[type=range]{width:100%;accent-color:var(--accent);min-height:28px}
+input[type=number],input[type=time]{font:inherit;font-family:var(--mono);padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);width:100%;min-height:42px}
+.readout{font-family:var(--mono);font-size:1.05rem;background:var(--surface-2);border-radius:8px;padding:12px 14px;line-height:1.7;overflow-x:auto}
+.readout b{color:var(--accent);font-weight:500}
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-family:var(--mono)}
+.chain .box{border:1.5px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--surface);text-align:center;min-width:64px}
+.chain .box small{display:block;font-family:var(--body);font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.chain .box.hi{border-color:var(--accent)}
+.chain .op{color:var(--muted);font-size:.85rem}
+.sig-list{display:flex;flex-direction:column;gap:8px}
+.sig{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--surface);cursor:pointer;text-align:left}
+.sig:hover{border-color:var(--muted)}
+.pattern{display:flex;gap:5px;align-items:center;min-width:92px}
+.pattern i{display:block;height:10px;border-radius:5px;background:var(--ink);opacity:.85;transition:background .1s}
+.pattern i.s{width:12px}.pattern i.p{width:40px}.pattern i.r{width:9px}
+.pattern i.on{background:var(--accent);opacity:1}
+.bigpattern{display:flex;gap:10px;align-items:center;justify-content:center;padding:26px 16px;flex-wrap:wrap}
+.bigpattern i{height:18px;border-radius:9px;background:var(--ink);display:block;opacity:.85}
+.bigpattern i.s{width:24px}.bigpattern i.p{width:84px}.bigpattern i.r{width:18px}
+.bigpattern i.on{background:var(--accent);opacity:1}
+.foot-note{font-size:.85rem;color:var(--muted);max-width:75ch}
+.scene{display:block}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+.kbd{font-family:var(--mono);font-size:.78rem;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* svg classes */
+.s-water{fill:var(--water)} .s-land{fill:var(--land)} .s-ink{fill:var(--ink)} .s-muted{fill:var(--muted)} .s-surface{fill:var(--surface)}
+.s-acc{fill:var(--accent)} .s-port{fill:var(--port)} .s-stbd{fill:var(--stbd)} .s-chart{fill:var(--chart)} .s-good{fill:var(--good)}
+.l-ink{stroke:var(--ink);fill:none} .l-muted{stroke:var(--muted);fill:none} .l-acc{stroke:var(--accent);fill:none} .l-chart{stroke:var(--chart);fill:none} .l-line{stroke:var(--line);fill:none}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .t-lab{font-family:var(--display);font-weight:700;letter-spacing:.06em;font-size:12px}
+svg .t-mono{font-family:var(--mono);font-size:11px}
+svg .t-small{font-size:11px;fill:var(--muted)}
+svg .t-acc{fill:var(--accent)}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="ah-ink" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10z" style="fill:var(--ink)"/></marker>
+    <marker id="ah-acc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10z" style="fill:var(--accent)"/></marker>
+    <marker id="ah-chart" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10z" style="fill:var(--chart)"/></marker>
+    <marker id="ah-muted" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10z" style="fill:var(--muted)"/></marker>
+    <marker id="ah-good" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10z" style="fill:var(--good)"/></marker>
+    <filter id="glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="5"/></filter>
+    <linearGradient id="nightsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#030810"/><stop offset="1" stop-color="#0c1f30"/></linearGradient>
+    <linearGradient id="daysky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bcd9ea"/><stop offset="1" stop-color="#e9f3f8"/></linearGradient>
+  </defs>
+</svg>
+
+<header class="top"><div class="top-in">
+  <a class="brand" href="#home" aria-label="Six-Pack Practice home">
+    <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" style="fill:var(--ink)"/><circle cx="20" cy="20" r="12.5" fill="none" style="stroke:var(--paper)" stroke-width="1.2"/><path d="M20 4 L23 20 L20 36 L17 20Z" style="fill:var(--paper)"/><path d="M20 4 L23 20 L17 20Z" style="fill:var(--accent)"/><path d="M4 20 L20 17.5 L36 20 L20 22.5Z" style="fill:var(--paper)" opacity=".55"/></svg>
+    <span><b>Six-Pack Practice</b><small>OUPV · Near Coastal</small></span>
+  </a>
+  <nav class="nav" id="nav"></nav>
+</div></header>
+<main id="app"></main>
+<nav class="tabbar" id="tabbar"></nav>
+
+<script>const BANK = {"Q100":[{"n":1,"q":"When two power-driven vessels meet head-on and risk collision, each ordinarily should?","o":["alter course to port","maintain speed with no lookout","turn off navigation lights","alter course to starboard"],"a":3,"x":"Rule 14 normally calls for both to alter starboard."},{"n":2,"q":"A power vessel has another power vessel on its starboard side in a crossing situation. It generally must?","o":["hold course and speed unconditionally","sound a distress signal","keep out of the way","cross ahead"],"a":2,"x":"Rule 15 places give-way duty on vessel seeing other to starboard."},{"n":3,"q":"The primary duty of an overtaking vessel is to?","o":["become stand-on once abeam","keep clear until finally past and clear","require overtaken vessel to stop","use a port turn always"],"a":1,"x":"Rule 13 continues until past and clear."},{"n":4,"q":"An approaching vessel stays on nearly constant compass bearing while getting closer. This suggests?","o":["risk of collision","there can be no collision","the other vessel is anchored","your compass is necessarily broken"],"a":0,"x":"Rule 7: constant bearing can indicate risk."},{"n":5,"q":"A lookout is maintained by?","o":["radar only","AIS only","the master only during daylight","sight, hearing, and all available appropriate means"],"a":3,"x":"Rule 5."},{"n":6,"q":"Safe speed depends in part on?","o":["posted cruising speed alone","engine maximum rpm only","visibility, traffic, maneuverability, hazards and draft","whether passengers request speed"],"a":2,"x":"Rule 6 lists multiple factors."},{"n":7,"q":"If two sailing vessels have wind on opposite sides, which usually gives way?","o":["vessel with wind on starboard side","vessel with wind on port side","vessel to leeward always","larger vessel always"],"a":1,"x":"Rule 12(a)(i)."},{"n":8,"q":"If both sailing vessels have wind on the same side, who generally keeps clear?","o":["windward vessel","leeward vessel","shorter mast","boat farther from shore"],"a":0,"x":"Rule 12(a)(ii)."},{"n":9,"q":"A sailboat using its engine for propulsion is classified as?","o":["sailing vessel in all conditions","vessel engaged in fishing","vessel not under command","power-driven vessel"],"a":3,"x":"Rule 3(c)."},{"n":10,"q":"Which rule governs conduct when vessels are not in sight in restricted visibility?","o":["Rule 12 only","Rule 15 only","Rule 19","Rule 30 only"],"a":2,"x":"Rule 19 covers restricted visibility."},{"n":11,"q":"A vessel less than 20 m in a narrow channel must generally not impede?","o":["all kayaks in all places","a vessel that can safely navigate only within that channel","only vessels registered abroad","every sailboat anywhere"],"a":1,"x":"Rule 9(b)."},{"n":12,"q":"In a traffic separation scheme, a vessel crossing should, as far as practicable, cross?","o":["at right angles to traffic flow","diagonally along the lane","in the separation zone","while anchoring"],"a":0,"x":"Rule 10(c)."},{"n":13,"q":"What is the minimum duty after making an avoidance maneuver?","o":["immediately look away","resume maximum speed","turn off radar","check the effect until finally past and clear"],"a":3,"x":"Rule 8(d)."},{"n":14,"q":"A stand-on vessel in a crossing situation may need to act when?","o":["it always prefers to turn first","it sees any boat three miles away","the give-way vessel fails to act and collision risk develops","it wants to shorten its route"],"a":2,"x":"Rule 17 permits/requires action in specified circumstances."},{"n":15,"q":"What is a short blast?","o":["about four to six seconds","about one second","more than one minute","any length selected by captain"],"a":1,"x":"Rule 32(b)."},{"n":16,"q":"What is a prolonged blast?","o":["about four to six seconds","one second","half a second","ten to fifteen seconds"],"a":0,"x":"Rule 32(c)."},{"n":17,"q":"How many all-round red lights vertically identify a vessel not under command?","o":["one","three","four","two"],"a":3,"x":"Rule 27(a)."},{"n":18,"q":"Day shape for vessel not under command?","o":["one black diamond","one black cone apex down","two black balls","one cylinder"],"a":2,"x":"Rule 27(a)."},{"n":19,"q":"RAM vessel light sequence is?","o":["white-red-white","red-white-red","green-white-green","red-green-red"],"a":1,"x":"Rule 27(b)."},{"n":20,"q":"RAM vessel day shape is?","o":["ball-diamond-ball","cone-ball-cone","three balls","one diamond"],"a":0,"x":"Rule 27(b)."},{"n":21,"q":"Trawling vessel lights include?","o":["red over white","white over red","red over red","green over white"],"a":3,"x":"Rule 26(b)."},{"n":22,"q":"Fishing vessel other than trawling lights include?","o":["green over white","white over red","red over white","white over white"],"a":2,"x":"Rule 26(c)."},{"n":23,"q":"Pilot vessel engaged on pilotage duty displays?","o":["red over white","white over red","green over white","red over red"],"a":1,"x":"Rule 29(a)."},{"n":24,"q":"A power-driven vessel underway generally needs?","o":["masthead light, sidelights and sternlight as applicable","only sternlight","only all-round red","anchor ball and no lights"],"a":0,"x":"Rule 23, subject to size exceptions."},{"n":25,"q":"A vessel at anchor normally displays?","o":["port and starboard sidelights in every case","red over white","only a yellow towing light","prescribed anchor light(s) or shape as applicable"],"a":3,"x":"Rule 30."},{"n":26,"q":"A sailing vessel under sail and under 20 m may combine sidelights and sternlight in?","o":["a blue all-round light","two red all-round lights","one tricolor lantern at or near mast top where permitted","white over red"],"a":2,"x":"Rule 25(b)."},{"n":27,"q":"A vessel constrained by draft is a category in?","o":["Inland Rules only","International Rules","all inland rivers without exception","rules for anchored barges only"],"a":1,"x":"Rule 3(h) International; Inland counterpart reserved."},{"n":28,"q":"The general meaning of “underway” is vessel?","o":["not at anchor, made fast to shore, or aground","making at least five knots","under engine power only","not drifting"],"a":0,"x":"Rule 3(i)."},{"n":29,"q":"A vessel with fishing rods that do not restrict maneuverability is usually?","o":["always restricted in ability to maneuver","always not under command","always constrained by draft","not a Rule 3 engaged-in-fishing vessel"],"a":3,"x":"Definition excludes trolling lines that do not restrict maneuverability."},{"n":30,"q":"What is the best response if uncertain a risk of collision exists?","o":["assume there is no risk","speed up toward the target","assume the risk exists","turn off AIS"],"a":2,"x":"Rule 7(a)."},{"n":31,"q":"Under Rules of the Road, a succession of small course changes to avoid collision should generally be?","o":["preferred over obvious action","avoided","mandatory","signaled by MAYDAY"],"a":1,"x":"Rule 8(b)."},{"n":32,"q":"Which vessel is responsible when overtaking a sailing vessel?","o":["overtaking vessel","sailing vessel always","vessel to starboard always","the larger vessel always"],"a":0,"x":"Rule 13 applies notwithstanding other meeting rules."},{"n":33,"q":"Sidelights are normally?","o":["green port, red starboard","red both sides","white both sides","red port, green starboard"],"a":3,"x":"Rule 21(b)."},{"n":34,"q":"An all-round light shows over?","o":["225 degrees","135 degrees","360 degrees","112.5 degrees"],"a":2,"x":"Rule 21(e)."},{"n":35,"q":"Sternlight arc is?","o":["360 degrees","135 degrees","225 degrees","112.5 degrees"],"a":1,"x":"Rule 21(c)."},{"n":36,"q":"Masthead light arc is?","o":["225 degrees","135 degrees","112.5 degrees","360 degrees"],"a":0,"x":"Rule 21(a)."},{"n":37,"q":"When departing a slip you see a target with only its sternlight visible ahead. You may be?","o":["in a head-on meeting","seeing its port beam","seeing it at anchor necessarily","overtaking it"],"a":3,"x":"Sternlight-only aspect often indicates overtaking sector."},{"n":38,"q":"A vessel pushing ahead that is rigidly connected into a composite unit is generally treated as?","o":["always a sailing vessel","always at anchor","a power-driven vessel of combined length","a vessel not under command"],"a":2,"x":"Rule 24(b)."},{"n":39,"q":"One green light over one white light is a common indicator of?","o":["pilot boat","trawling","vessel not under command","anchored sailboat"],"a":1,"x":"Rule 26."},{"n":40,"q":"A vessel not under command is unable to maneuver because of?","o":["exceptional circumstance","choice to sail slowly","intent to fish","having passengers aboard"],"a":0,"x":"Rule 3(f)."},{"n":41,"q":"A vessel restricted in ability to maneuver has limits due to?","o":["its preference for slow speed","having a single engine","its recreational status","nature of its work"],"a":3,"x":"Rule 3(g)."},{"n":42,"q":"A crossing powerboat approaching from port is ordinarily the?","o":["stand-on vessel regardless","vessel constrained by draft","give-way vessel when both are power driven and in sight","vessel restricted in ability to maneuver"],"a":2,"x":"Rule 15; remember exceptions/context."},{"n":43,"q":"When approaching a blind bend in a narrow channel, you should?","o":["increase to maximum speed","navigate cautiously and give prescribed signal","assume channel is empty","cross to port side regardless"],"a":1,"x":"Rule 9(f) and 34(e)."},{"n":44,"q":"Which condition requires a fog signal under Rule 35?","o":["in or near restricted visibility","only clear daylight","only while moored at dock","only during a regatta"],"a":0,"x":"Rule 35."},{"n":45,"q":"A stand-on vessel is generally instructed to?","o":["turn hard to port in all cases","always stop immediately","ignore developing risk","maintain course and speed initially"],"a":3,"x":"Rule 17(a)(i) with safety exceptions."},{"n":46,"q":"Who can depart from Rules when necessary to avoid immediate danger?","o":["anyone seeking convenience","only a sailing boat","mariner accounting for special circumstances under Rule 2","no vessel under any circumstances"],"a":2,"x":"Rule 2(b) preserves special circumstances."},{"n":47,"q":"A power-driven vessel making way in fog generally sounds?","o":["two short blasts every five minutes","one prolonged blast at intervals not more than two minutes","five short blasts each second","bell only"],"a":1,"x":"Rule 35(a)."},{"n":48,"q":"A power-driven vessel underway but stopped and making no way sounds in fog?","o":["two prolonged blasts separated by about two seconds","one short blast","one bell stroke","three short blasts"],"a":0,"x":"Rule 35(b)."},{"n":49,"q":"Rule 34 danger/doubt signal contains?","o":["one prolonged only","three prolonged only","one short only","at least five short and rapid blasts"],"a":3,"x":"Rule 34(d)."},{"n":50,"q":"One factor in selecting safe speed with radar is?","o":["only vessel length","only wind direction","radar limitations and range scale","only current ETA"],"a":2,"x":"Rule 6(b)."}],"Q170":[{"n":1,"q":"Most appropriate first response to a person overboard?","o":["reverse at full throttle blindly","jump in without alerting crew","continue trip","raise alarm, keep sight and deploy flotation"],"a":3,"x":"Raise alarm, mark person, deploy flotation and maneuver safely."},{"n":2,"q":"A bowline is primarily used to create?","o":["a permanent wire splice","a rolling hitch only","a fixed loop","a block and tackle"],"a":2,"x":"Bowline forms a non-slipping loop under ordinary load."},{"n":3,"q":"Best way to avoid injury while docking is to?","o":["push hull away with bare hands","keep limbs clear of pinch points","stand in rope bight","wrap dockline around wrist"],"a":1,"x":"Line-of-fire hazards are serious."},{"n":4,"q":"The bight of a line is?","o":["a curved section of rope","the anchor shank","the cleat horn","the boat freeboard"],"a":0,"x":"Learn marlinspike vocabulary."},{"n":5,"q":"Anchor scope ratio compares rode length to?","o":["boat length","crew count","engine power","vertical distance from bow roller to bottom"],"a":3,"x":"Scope depends on water depth, bow height and conditions."},{"n":6,"q":"A dragging anchor is indicated by?","o":["only rising wind","only low fuel","changing fixed bearings or tracking relative to seabed","only tide clock"],"a":2,"x":"Check against fixed objects or charted ground track."},{"n":7,"q":"When a line is heavily loaded, personnel should?","o":["step in bight","stay clear of snapback zones","pull across chest","stand between line and cleat"],"a":1,"x":"A failed line may recoil violently."},{"n":8,"q":"A cleat hitch is used to?","o":["secure a line to a cleat","join two different diameter ropes permanently","measure current","make a reef in sail"],"a":0,"x":"Simple securing hitch."},{"n":9,"q":"A figure-eight knot is often used as a?","o":["anchor shackle substitute","wire crimp","rescue harness alone","stopper knot"],"a":3,"x":"Prevents end from slipping through fitting."},{"n":10,"q":"The round turn and two half hitches are useful for?","o":["creating chart fix","running a diesel","securing line around an object","marking datum"],"a":2,"x":"Common line-handling knot."},{"n":11,"q":"Fire triangle components are?","o":["fuel, coolant, bilge","fuel, heat, oxygen","salt, oil, wind","carbon dioxide, foam, water"],"a":1,"x":"Removing one can stop combustion; tetrahedron adds chain reaction."},{"n":12,"q":"Class A fire involves?","o":["ordinary solid combustibles","energized electrical equipment","flammable liquids","cooking oils"],"a":0,"x":"Common wood, paper, cloth."},{"n":13,"q":"Class B fire primarily involves?","o":["ordinary paper","energized circuits only","metal filings only","flammable liquids"],"a":3,"x":"Fuel and flammable liquids."},{"n":14,"q":"Class C fire classification relates to?","o":["passenger count","paint only","energized electrical equipment","wooden decks"],"a":2,"x":"Select approved agent and remove power when safe."},{"n":15,"q":"If you smell gasoline vapor in an enclosed engine space, you should?","o":["crank engine to clear vapor","stop ignition sources and investigate before starting","operate spark-producing switches","light a match to locate leak"],"a":1,"x":"Vapor may explode."},{"n":16,"q":"A blocked raw-water strainer can lead to?","o":["engine overheating","higher oil pressure guarantee","more propeller pitch","improved charging"],"a":0,"x":"Reduced coolant flow."},{"n":17,"q":"A failed seawater impeller commonly causes?","o":["greater exhaust water","taller mast","loss of chart datum","insufficient cooling-water flow"],"a":3,"x":"Know engine cooling circuit."},{"n":18,"q":"Battery hydrogen accumulation is dangerous due to?","o":["lack of buoyancy","low salinity","flammability","chart scale"],"a":2,"x":"Ventilate and avoid sparks."},{"n":19,"q":"In a DC circuit, power in watts equals?","o":["volts divided by resistance only","volts times amperes","amperes minus volts","RPM times knots"],"a":1,"x":"P=VI."},{"n":20,"q":"A partially filled wide tank may reduce stability because of?","o":["free-surface effect","higher anchor scope","increased ballast fixed low","improved righting lever always"],"a":0,"x":"Moving free surface reduces stability."},{"n":21,"q":"Adding substantial cargo high above deck generally?","o":["lowers center of gravity","always raises freeboard","eliminates free surface","raises center of gravity and can reduce stability"],"a":3,"x":"Stability can worsen."},{"n":22,"q":"An emergency briefing should cover?","o":["only lunch time","only speed capability","PFDs, movement restrictions, emergencies, and crew directions","only radio entertainment"],"a":2,"x":"Passengers need usable instructions."},{"n":23,"q":"Appropriate first priority in onboard fire is?","o":["open all fuel valves","alarm, account for people, assess and control when safe","ignore smoke","spray water on all energized panels"],"a":1,"x":"Life safety first."},{"n":24,"q":"MAYDAY is appropriate for?","o":["grave and imminent danger","routine weather request","ordinary ETA change","nonurgent navigational chat"],"a":0,"x":"Distress priority."},{"n":25,"q":"A PAN-PAN call indicates?","o":["routine music channel","mandatory weather silence","person already safe ashore","urgency without imminent grave distress"],"a":3,"x":"Urgency signal distinct from distress."},{"n":26,"q":"A passenger vessel captain should know?","o":["only marketing price","only local restaurant rules","maximum permitted passengers and applicable credential/vessel limits","that all charters are unregulated"],"a":2,"x":"OUPV commonly up to six paying passengers on qualifying uninspected vessels."},{"n":27,"q":"A bilge pump should be considered?","o":["replacement for watertight hull","one element of flooding response, not proof of watertightness","substitute for life raft","required to run nonstop"],"a":1,"x":"Control ingress and preserve power."},{"n":28,"q":"A fire extinguisher should be selected based on?","o":["approved type and hazard classification","paint color alone","captain preference alone","dock distance"],"a":0,"x":"Extinguisher suitability depends on class and carriage rules."},{"n":29,"q":"What should a skipper do before a heavy-weather passage?","o":["depend only on yesterday forecast","skip passenger briefing","leave unsecured gear","check current forecast, vessel condition, alternate routes and safety margins"],"a":3,"x":"Risk management prevents emergencies."},{"n":30,"q":"A wet exhaust cooling-water failure may first show as?","o":["a bigger masthead light","stronger sternway","reduced discharge and rising exhaust or engine temperature","a lower tide"],"a":2,"x":"Inspect cooling indicators."},{"n":31,"q":"Low engine oil pressure while running requires?","o":["increasing throttle to force pressure","prompt protective action and diagnosis","adding gasoline to diesel","ignoring alarm"],"a":1,"x":"Lubrication loss can cause rapid damage."},{"n":32,"q":"Prop walk describes?","o":["sideways tendency caused by propeller thrust effects","current set only","depth sounding","AIS target motion"],"a":0,"x":"Common at low speed, especially in reverse."},{"n":33,"q":"A pivot point is?","o":["anchor securing point","a chart datum","center of gravity always","the approximate point around which vessel turns while maneuvering"],"a":3,"x":"Depends on motion."},{"n":34,"q":"For a person in water near propeller, crew should?","o":["leave engine in gear at recovery","throw lines into propeller","manage propulsion to avoid striking casualty","approach at full speed"],"a":2,"x":"Propeller strikes can be fatal."},{"n":35,"q":"Which document records vessel route and local hazards?","o":["crew pay stub","Coast Pilot and current charts","fuel receipt","old slip agreement"],"a":1,"x":"Navigation planning documents."},{"n":36,"q":"An EPIRB is designed to?","o":["transmit distress alert/location information when activated","replace all PFDs","provide radar collision avoidance","forecast surf"],"a":0,"x":"Emergency beacon."},{"n":37,"q":"USCG-approved lifejackets should be?","o":["stored locked under heavy gear","used only in cold water","substituted with cushions anywhere","appropriate for people and activity, accessible and serviceable"],"a":3,"x":"Type and carriage rules vary."},{"n":38,"q":"A proper predeparture inspection includes?","o":["only cabin cushions","only music","fuel, engine, steering, bilge, weather, safety equipment","only GPS color scheme"],"a":2,"x":"System checks identify preventable defects."},{"n":39,"q":"Pollution prevention aboard includes?","o":["dumping oil when offshore","preventing oil discharge and following applicable waste rules","emptying trash near buoys","discharging fuel to cool engine"],"a":1,"x":"Environmental compliance."},{"n":40,"q":"When a vessel strikes bottom, initial actions include?","o":["check people, flooding, position and propulsion","immediately accelerate blindly","ignore bilges","leave all seacocks open regardless"],"a":0,"x":"Grounding can compromise hull and systems."},{"n":41,"q":"A proper marine radio emergency call includes?","o":["only vessel nickname","only a music request","no position ever","identity, position, nature, assistance, persons onboard"],"a":3,"x":"Clear communications enable rescue."},{"n":42,"q":"Fuel shutoff valves are useful during?","o":["chart plotting","reading Light List","fuel leak or fire response when safe to operate","anchoring scope math"],"a":2,"x":"Isolate fire fuel source."},{"n":43,"q":"A person working on an enclosed compartment should first consider?","o":["only compass variation","ventilation, atmosphere, access and rescue hazards","only line length","only current speed"],"a":1,"x":"Confined spaces can be fatal."},{"n":44,"q":"A shipboard watch requires?","o":["continuous situational awareness and assigned responsibilities","intermittent glances only","automatic pilot with nobody looking","one lookout only when docked"],"a":0,"x":"Watchkeeping is active."},{"n":45,"q":"Safe maneuvering near shore involves?","o":["only published cruising speed","only anchor color","only tide coefficient","wind, current, stopping distance, obstructions"],"a":3,"x":"Plan safe approach."},{"n":46,"q":"A drogue or sea anchor is used in some conditions to?","o":["replace bilge pump","increase engine rpm","alter vessel drift/attitude in seas","measure speed"],"a":2,"x":"Use depends on vessel-specific training."},{"n":47,"q":"Chafe protection on mooring lines helps prevent?","o":["magnetic variation","abrasion damage","engine overheating","radio interference"],"a":1,"x":"Inspect at contact points."},{"n":48,"q":"Engine ventilation matters because?","o":["combustion air, vapor removal, and heat management are important","it changes latitude","it reduces hull length","it replaces collision rules"],"a":0,"x":"Vessel design may require specific blowers."},{"n":49,"q":"A sound emergency plan should include?","o":["only primary phone battery","only preferred restaurant","only departure ETA","alternate communication and abandon-ship contingencies"],"a":3,"x":"Redundancy is crucial."},{"n":50,"q":"A vessel captain should verify if rules apply using?","o":["only vessel color","only insurance premium","vessel type, length, service, route, and current regulations","only leisure vs paid label"],"a":2,"x":"Regulatory thresholds are context dependent."}],"Q171":[{"n":1,"q":"IALA Region B conventional return-from-sea lateral color to starboard is generally?","o":["red","green","yellow","black"],"a":0,"x":"Red right returning; consider conventional direction."},{"n":2,"q":"Charted depths on most NOAA navigation charts reference?","o":["height of mast","ship speed","barometer","specified chart datum"],"a":3,"x":"Read datum printed on chart."},{"n":3,"q":"One minute of latitude is approximately?","o":["one statute mile","one kilometer","one nautical mile","ten nautical miles"],"a":2,"x":"A core distance relationship."},{"n":4,"q":"A Light List is primarily a reference for?","o":["crew rosters","aids to navigation and light characteristics","engine repair parts","passenger insurance"],"a":1,"x":"USCG Light Lists."},{"n":5,"q":"A Coast Pilot primarily provides?","o":["narrative coastal navigation information","only tidal phase","only ship registration","only knot-tying"],"a":0,"x":"NOAA Coast Pilot."},{"n":6,"q":"Notice to Mariners conveys?","o":["boat tax rebates","crew schedules","lifejacket manufacturer ads","changes affecting navigation and publications"],"a":3,"x":"Consult current notices."},{"n":7,"q":"Magnetic variation is difference between?","o":["compass and bow","wind and water current","true north and magnetic north","latitude and longitude"],"a":2,"x":"Variation from earth magnetic field."},{"n":8,"q":"Compass deviation is due mainly to?","o":["the moon alone","magnetic influence of vessel and equipment","sea salinity alone","chart datum"],"a":1,"x":"Deviation varies with heading/vessel."},{"n":9,"q":"If compass course 080°, deviation +3°E and variation -7°W, true is?","o":["076°T","090°T","070°T","084°T"],"a":0,"x":"080+3-7=076."},{"n":10,"q":"A vessel steering north at 6 kn with 2 kn east current has ground track about?","o":["000°T","342°T","090°T","018°T"],"a":3,"x":"atan(2/6)=18.4 degrees east of north."},{"n":11,"q":"Set of current denotes?","o":["direction wind blows from","ship heading","direction water flows","wave period"],"a":2,"x":"Set = toward direction."},{"n":12,"q":"Drift of current denotes?","o":["boat anchor depth","speed of current","magnetic error","wave height"],"a":1,"x":"Usually knots."},{"n":13,"q":"Speed over ground differs from speed through water due to?","o":["current and other movement over bottom","always chart scale only","only light characteristics","only moon declination"],"a":0,"x":"Ground vector = through-water vector plus current."},{"n":14,"q":"A line of position represents?","o":["one certain fix always","boat draft","engine rpm","possible positions along a line"],"a":3,"x":"A bearing forms LOP."},{"n":15,"q":"Two independent LOPs crossing can give?","o":["current rate directly","automatic heading error","a position fix","tide height directly"],"a":2,"x":"Accuracy depends on observations and geometry."},{"n":16,"q":"A running fix uses?","o":["one fixed position at same time only","LOPs obtained at different times adjusted for vessel movement","GPS without chart","just barometer readings"],"a":1,"x":"Advance earlier bearing line."},{"n":17,"q":"Dead reckoning uses?","o":["course, speed and elapsed time from a known point","only tide table","only radar ranges","only vessel draft"],"a":0,"x":"DR is predicted position."},{"n":18,"q":"Estimated position commonly combines?","o":["only an AIS name","only vessel speed","only engine hours","DR and additional imperfect position information"],"a":3,"x":"EP uses imperfect observations/estimated current."},{"n":19,"q":"When plotting distance on a Mercator chart, use?","o":["longitude scale universally","compass rose ring as distance","latitude scale at relevant latitude","sounding legend"],"a":2,"x":"Latitude minute approximates nm."},{"n":20,"q":"A bearing 045°T from your vessel to lighthouse means reciprocal from lighthouse is?","o":["135°T","225°T","315°T","045°T"],"a":1,"x":"Add 180 modulo 360."},{"n":21,"q":"A prominent drying height on chart means?","o":["feature rises above chart datum when exposed","it is always submerged","it is lighthouse height","it is boat draft"],"a":0,"x":"Symbols and datums matter."},{"n":22,"q":"A soundings unit must be checked because charts may use?","o":["only meters always","only feet always","only inches","meters, feet or fathoms"],"a":3,"x":"Read chart notes."},{"n":23,"q":"A tide height of +3 ft and charted depth 8 ft gives static depth?","o":["5 ft","24 ft","11 ft","8 ft"],"a":2,"x":"8+3=11."},{"n":24,"q":"Semidiurnal tide normally has?","o":["one high per month","two highs and two lows per lunar day","no low tide","four highs per hour"],"a":1,"x":"Local tides can be mixed."},{"n":25,"q":"Spring tides occur around?","o":["new and full moons","first/third quarters","only solstices","only noon"],"a":0,"x":"Sun/moon aligned."},{"n":26,"q":"Neap tides occur around?","o":["full moon only","new moon only","eclipses only","first and third quarter moons"],"a":3,"x":"Smaller tidal range."},{"n":27,"q":"Tidal current predictions specify?","o":["fuel flow","vessel draft","time, direction and rate","magnetic compass error"],"a":2,"x":"Currents differ from vertical tides."},{"n":28,"q":"The magnetic compass measures direction relative to?","o":["true north without correction","magnetic north including deviation effects","GPS datum","chart scale"],"a":1,"x":"Apply variation/deviation corrections."},{"n":29,"q":"Course over ground means?","o":["actual direction of motion over the earth","bow direction only","wind direction","direction to next waypoint only"],"a":0,"x":"GPS COG represents track."},{"n":30,"q":"A decreasing barometer may suggest?","o":["guaranteed clear sky","constant tide","no wind possible","changing weather or approaching low pressure"],"a":3,"x":"Use full forecast context."},{"n":31,"q":"Thunderstorm risk includes?","o":["only higher tides","only lower salinity","lightning, gust fronts, sudden wind and visibility changes","only compass deviation"],"a":2,"x":"Monitor radar and weather warnings."},{"n":32,"q":"Sea breeze typically develops when?","o":["moon causes direct landward current","land heating creates onshore local wind in suitable conditions","fog always clears instantly","water temperature equals all land temperatures"],"a":1,"x":"Local circulation phenomenon."},{"n":33,"q":"Advection fog forms commonly when?","o":["moist air moves over colder surface","boat engine heats cabin","only rain evaporates in sunshine","mountains create hail"],"a":0,"x":"Cooling to dew point."},{"n":34,"q":"Radiation fog forms often with?","o":["strong midday solar heating","high wind always","hot dry desert midday","clear, calm nights and surface cooling"],"a":3,"x":"Ground cooling."},{"n":35,"q":"AIS is best understood as?","o":["guaranteed all boats detected","an official substitute for chart","supplemental target information, not a substitute for lookout","weather forecast"],"a":2,"x":"Some vessels do not transmit."},{"n":36,"q":"Radar may miss small targets due to?","o":["vessel name spelling","sea clutter, range and target limitations","GPS settings only","chart title"],"a":1,"x":"Understand radar blind spots."},{"n":37,"q":"GPS coordinates must be interpreted using?","o":["correct chart datum and receiver settings","only hull color","only engine RPM","only tide type"],"a":0,"x":"Datum mismatch can cause error."},{"n":38,"q":"Danger bearing is?","o":["magnetic deviation table","sunset azimuth only","radio channel","a predetermined bearing boundary to stay clear of hazard"],"a":3,"x":"Plot with care."},{"n":39,"q":"Range lights aligned vertically generally indicate?","o":["automatic safe depth everywhere","wind speed","a designed track or channel alignment","boat speed over ground"],"a":2,"x":"Keep correct transit alignment as applicable."},{"n":40,"q":"A cardinal mark identifies?","o":["right returning automatically","safe side relative to mark by cardinal direction","always deep water all around","vessel nationality"],"a":1,"x":"Check region/system and chart."},{"n":41,"q":"Isolated danger mark indicates?","o":["a localized hazard with navigable water around","fairway center only","preferred channel to port","restricted area boundary always"],"a":0,"x":"Commonly black/red horizontal bands with two black balls."},{"n":42,"q":"A safe water mark typically has?","o":["solid yellow always","black with one red band","red over green","red and white vertical stripes"],"a":3,"x":"Indicates navigable water around."},{"n":43,"q":"A preferred channel marker in Region B usually shows?","o":["plain solid blue","only white","a contrasting color band and distinct top color","no color coding"],"a":2,"x":"Bifurcation aids."},{"n":44,"q":"A light shown Fl(2) 10s means?","o":["two seconds of darkness only","group of two flashes every ten seconds","fixed light for ten minutes","ten flashes per second"],"a":1,"x":"Read notation carefully."},{"n":45,"q":"A fixed light is abbreviated?","o":["F","Fl(3)","Oc","Iso"],"a":0,"x":"F = fixed."},{"n":46,"q":"An occulting light has?","o":["no light ever","only green flashes","a beacon without power","light duration generally longer than darkness"],"a":3,"x":"Oc notation."},{"n":47,"q":"A meteorological cold front commonly brings?","o":["guaranteed calm for days","no temperature change","changes in wind, clouds and potentially squalls","only permanent fog"],"a":2,"x":"Assess forecasts and observations."},{"n":48,"q":"The symbol for underwater cable on charts matters because?","o":["it is a recommended fishing spot","anchoring/dredging may be restricted or hazardous","it predicts rain","it identifies speed limit alone"],"a":1,"x":"Consult chart restrictions."},{"n":49,"q":"Under-keel clearance should account for?","o":["depth, tide, draft, squat, heel, waves and uncertainty","only charted depth","only vessel beam","only magnetic variation"],"a":0,"x":"Static depth is not full safety margin."},{"n":50,"q":"An approaching navigation light has constant bearing but decreasing range; you should?","o":["assume safe passage","ignore vessel until night ends","trust GPS to stop collision","assess collision risk with all available means"],"a":3,"x":"Rule 7 applies."}],"Q172":[{"n":1,"q":"18 nm at 6 kn takes?","o":["2 h","3 h","4 h","6 h"],"a":1,"x":"18/6=3."},{"n":2,"q":"At 10 kn for 24 minutes, distance is?","o":["4 nm","2.4 nm","10 nm","24 nm"],"a":0,"x":"10×24/60=4."},{"n":3,"q":"True course 100°, variation 8°W, deviation 2°E: compass is?","o":["90°","110°","94°","106°"],"a":3,"x":"Magnetic =108°, Compass=106°."},{"n":4,"q":"Compass 275°, deviation 4°W, variation 10°E: true is?","o":["269°","289°","281°","261°"],"a":2,"x":"275-4+10=281."},{"n":5,"q":"Boat north 6 kn, current east 2 kn: SOG is closest to?","o":["4 kn","6.32 kn","8 kn","12 kn"],"a":1,"x":"sqrt(36+4)=6.32."},{"n":6,"q":"Charted depth 7 ft, tide +5 ft, draft 8 ft: static clearance?","o":["4 ft","20 ft","2 ft","0 ft"],"a":0,"x":"7+5-8=4."},{"n":7,"q":"Departure 1420, run 15 nm at 5 kn: ETA?","o":["1620","1520","1820","1720"],"a":3,"x":"3 hours."},{"n":8,"q":"Latitude 38°04.0 N to 38°15.5 N along meridian equals?","o":["1.15 nm","115 nm","11.5 nm","19.5 nm"],"a":2,"x":"11.5 minutes latitude."},{"n":9,"q":"True bearing of landmark from vessel 315°: reciprocal?","o":["045°","135°","225°","315°"],"a":1,"x":"Add 180, wrap modulo 360."},{"n":10,"q":"A vessel covers 14 nm between 0800 and 1000. SMG is?","o":["7 kn","14 kn","28 kn","3.5 kn"],"a":0,"x":"14/2=7."}]};</script>
+<script>
+"use strict";
+/* ---------- basics ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pickOne = a => a[Math.floor(Math.random() * a.length)];
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pad3 = n => String(Math.round(n)).padStart(3, "0");
+const norm = d => ((Math.round(d) % 360) + 360) % 360;
+const deg = d => pad3(norm(d)) + "°";
+const fmt1 = n => (Math.round(n * 10) / 10).toFixed(1).replace(/\.0$/, "");
+const hhmm = m => { m = ((m % 1440) + 1440) % 1440; return String(Math.floor(m / 60)).padStart(2, "0") + String(m % 60).padStart(2, "0"); };
+const ew = (v) => (Math.abs(v) + "°" + (v >= 0 ? "E" : "W"));
+
+const MOD = {
+  Q100: { code: "Q100", name: "Rules of the Road", pass: 45, total: 50 },
+  Q170: { code: "Q170", name: "Deck General & Safety", pass: 35, total: 50 },
+  Q171: { code: "Q171", name: "Navigation General", pass: 35, total: 50 },
+  Q172: { code: "Q172", name: "Chart Plotting", pass: 9, total: 10 }
+};
+const TOPIC_MAP = {
+  Q100: { collision: [1,2,3,7,8,9,11,12,14,28,32,38,42,45,46], risk: [4,5,6,13,30,31,50], lights: [17,18,19,20,21,22,23,24,25,26,27,29,33,34,35,36,37,39,40,41], signals: [10,15,16,43,44,47,48,49] },
+  Q170: { anchoring: [5,6,46,47], fire: [11,12,13,14,15,18,23,28,42], mob: [1,22,24,25,27,34,36,37,40,41,49], lines: [2,3,4,7,8,9,10,32,33,45], systems: [16,17,19,30,31,38,43,48], stability: [20,21,26,29,35,39,44,50] },
+  Q171: { buoys: [1,39,40,41,42,43,44,45,46], compass: [7,8,9,20,28], tides: [2,21,22,23,24,25,26,27,49], weather: [30,31,32,33,34,47], charts: [3,4,5,6,19,35,36,37,38,48], current: [10,11,12,13,29], lop: [14,15,16,18], dr: [17], risk: [50] },
+  Q172: { eta: [1,2,7,8,10], compass: [3,4], current: [5], tides: [6], lop: [9] }
+};
+const QUESTIONS = [];
+for (const m of Object.keys(BANK)) for (const q of BANK[m]) {
+  let lesson = null;
+  for (const [l, ns] of Object.entries(TOPIC_MAP[m])) if (ns.includes(q.n)) lesson = l;
+  QUESTIONS.push({ id: m + "-" + String(q.n).padStart(2, "0"), mod: m, n: q.n, q: q.q, o: q.o, a: q.a, x: q.x, lesson });
+}
+const QBYID = Object.fromEntries(QUESTIONS.map(q => [q.id, q]));
+
+/* ---------- storage (per-browser convenience) ---------- */
+const KEY = "sixpack-practice-v1";
+let S = { q: {}, exams: {}, drills: {} };
+try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch (e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+function record(id, ok) { const r = S.q[id] || (S.q[id] = { c: 0, w: 0, last: 0 }); ok ? r.c++ : r.w++; r.last = ok ? 1 : -1; }
+function modStats(m) {
+  const qs = QUESTIONS.filter(q => q.mod === m);
+  let seen = 0, mastered = 0, c = 0, w = 0, missed = 0;
+  for (const q of qs) { const r = S.q[q.id]; if (!r) continue; seen++; c += r.c; w += r.w; if (r.last === 1) mastered++; if (r.last === -1) missed++; }
+  return { total: qs.length, seen, mastered, acc: c + w ? Math.round(100 * c / (c + w)) : null, missed };
+}
+const missedIds = () => QUESTIONS.filter(q => S.q[q.id] && S.q[q.id].last === -1).map(q => q.id);
+
+/* ---------- icons ---------- */
+const IC = {
+  home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>',
+  learn: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h7a3 3 0 013 3v12a2 2 0 00-2-2H3z"/><path d="M21 5h-7a3 3 0 00-3 3"/><path d="M21 5v13h-8"/></svg>',
+  practice: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>',
+  exam: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>',
+  drills: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="5"/></svg>',
+  play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg>',
+  stop: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>',
+  arrow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>',
+  flag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4h11l-2 4 2 4H5"/></svg>'
+};
+const NAV = [["home", "Home"], ["learn", "Learn"], ["practice", "Practice"], ["exam", "Mock exam"], ["drills", "Visual drills"]];
+
+/* ---------- small svg helpers ---------- */
+const BOAT = "M0,-16 C7,-9 8,4 6,14 L-6,14 C-8,4 -7,-9 0,-16Z";
+const boat = (x, y, r, cls = "s-ink", sc = 1) => `<path d="${BOAT}" class="${cls}" transform="translate(${x} ${y}) rotate(${r}) scale(${sc})"/>`;
+const pt = (cx, cy, r, b) => [cx + r * Math.sin(b * Math.PI / 180), cy - r * Math.cos(b * Math.PI / 180)];
+function sector(cx, cy, r, a1, a2) { const [x1, y1] = pt(cx, cy, r, a1), [x2, y2] = pt(cx, cy, r, a2); const large = (a2 - a1) > 180 ? 1 : 0; return `M${cx},${cy} L${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 ${large} 1 ${x2.toFixed(1)},${y2.toFixed(1)} Z`; }
+const T = (x, y, s, cls = "t-lab", extra = "") => `<text x="${x}" y="${y}" class="${cls}" ${extra}>${s}</text>`;
+
+/* ---------- NIGHT LIGHTS ---------- */
+const LC = { r: "#ff4a3d", g: "#39e98a", w: "#fff4d6", y: "#ffd23a" };
+const SIDE = { t: "side", x: .32, h: 26 }, STERN = { t: "stern", x: .98, h: 22 };
+const VESSELS = {
+  power: { name: "Power-driven vessel underway, under 50 m", lights: [{ t: "mast", x: .3, h: 66 }, SIDE, STERN], views: ["ahead", "port", "stbd"], desc: "One masthead light (white, 225° forward), red and green sidelights and a white sternlight. Rule 23." },
+  power50: { name: "Power-driven vessel underway, 50 m or more", lights: [{ t: "mast", x: .2, h: 58 }, { t: "mast", x: .66, h: 84 }, SIDE, STERN], views: ["port", "stbd"], desc: "Two masthead lights, the after one higher, plus sidelights and sternlight. The range of the two whites shows her heading. Rule 23." },
+  sail: { name: "Sailing vessel underway", sail: true, lights: [SIDE, STERN], views: ["ahead", "port", "stbd"], desc: "Sidelights and sternlight only: no masthead light. Under 20 m she may combine them in a tricolor at the masthead. Rule 25." },
+  tow: { name: "Power-driven vessel towing astern (tow 200 m or less)", lights: [{ t: "mast", x: .28, h: 58 }, { t: "mast", x: .28, h: 76 }, SIDE, STERN, { t: "tow", x: .98, h: 38 }], views: ["ahead", "port", "astern"], desc: "Two masthead lights in a vertical line (three if the tow is over 200 m), sidelights, sternlight and a yellow towing light above the sternlight. Rule 24." },
+  trawl: { name: "Vessel trawling, making way", lights: [{ t: "ar", c: "g", x: .45, h: 74 }, { t: "ar", c: "w", x: .45, h: 56 }, SIDE, STERN], views: ["ahead", "port", "stbd"], desc: "All-round green over white (\"green over white, trawling at night\"), plus sidelights and sternlight when making way. Rule 26(b)." },
+  fish: { name: "Vessel fishing (not trawling), making way", lights: [{ t: "ar", c: "r", x: .45, h: 74 }, { t: "ar", c: "w", x: .45, h: 56 }, SIDE, STERN], views: ["ahead", "port", "stbd"], desc: "All-round red over white (\"red over white, fishing at night\"), plus sidelights and sternlight when making way. Rule 26(c)." },
+  nuc: { name: "Vessel not under command, making way", lights: [{ t: "ar", c: "r", x: .45, h: 82 }, { t: "ar", c: "r", x: .45, h: 62 }, SIDE, STERN], views: ["ahead", "port"], desc: "Two all-round red lights in a vertical line (\"red over red, the captain is dead\"), plus sidelights and sternlight when making way. Rule 27(a)." },
+  ram: { name: "Vessel restricted in ability to maneuver, making way", lights: [{ t: "mast", x: .2, h: 50 }, { t: "ar", c: "r", x: .5, h: 112 }, { t: "ar", c: "w", x: .5, h: 94 }, { t: "ar", c: "r", x: .5, h: 76 }, SIDE, STERN], views: ["ahead", "port"], desc: "All-round red-white-red in a vertical line; when making way, also masthead light, sidelights and sternlight. Rule 27(b)." },
+  pilot: { name: "Pilot vessel on pilotage duty, underway", lights: [{ t: "ar", c: "w", x: .45, h: 74 }, { t: "ar", c: "r", x: .45, h: 56 }, SIDE, STERN], views: ["ahead", "stbd"], desc: "All-round white over red (\"white over red, pilot ahead\"), plus sidelights and sternlight when underway. Rule 29." },
+  anchor: { name: "Vessel at anchor, under 50 m", lights: [{ t: "ar", c: "w", x: .1, h: 48 }], views: ["port", "stbd"], desc: "One all-round white light where it can best be seen. Under 7 m, not required outside anchorage/channel areas. Rule 30." },
+  anchor50: { name: "Vessel at anchor, 50 m or more", lights: [{ t: "ar", c: "w", x: .06, h: 62 }, { t: "ar", c: "w", x: .94, h: 38 }], views: ["port", "stbd"], desc: "Two all-round whites: forward light higher than the after one. Rule 30(a)." },
+  aground: { name: "Vessel aground", lights: [{ t: "ar", c: "w", x: .1, h: 44 }, { t: "ar", c: "r", x: .5, h: 86 }, { t: "ar", c: "r", x: .5, h: 66 }], views: ["port", "ahead"], desc: "Anchor light(s) plus two all-round red lights in a vertical line. By day: three black balls. Rule 30(d)." },
+  cbd: { name: "Vessel constrained by her draft (International)", lights: [{ t: "mast", x: .2, h: 52 }, { t: "ar", c: "r", x: .5, h: 112 }, { t: "ar", c: "r", x: .5, h: 94 }, { t: "ar", c: "r", x: .5, h: 76 }, SIDE, STERN], views: ["ahead", "port"], desc: "Three all-round red lights in a vertical line (or a cylinder by day) in addition to power-driven lights. International Rules only. Rule 28." }
+};
+const VIEWN = { ahead: "from dead ahead", port: "on her port side", stbd: "on her starboard side", astern: "from astern" };
+
+function lightsSVG(key, view) {
+  const v = VESSELS[key], WL = 150, W = 320;
+  const side = view === "port" || view === "stbd";
+  const pos = view === "port" ? x => 72 + x * 176 : view === "stbd" ? x => 248 - x * 176 : () => 160;
+  let s = `<svg viewBox="0 0 ${W} 190" class="scene" role="img" aria-label="Night scene: a vessel seen ${VIEWN[view]}"><rect width="${W}" height="190" fill="url(#nightsky)"/>`;
+  for (let i = 0; i < 22; i++) { const sx = (i * 73) % W, sy = (i * 37) % 110 + 6; s += `<circle cx="${sx}" cy="${sy}" r="${i % 3 ? .6 : 1}" fill="#9fb6c8" opacity="${.25 + (i % 4) * .1}"/>`; }
+  s += `<rect y="${WL}" width="${W}" height="40" fill="#04101a"/><line x1="0" x2="${W}" y1="${WL}" y2="${WL}" stroke="#16324a" stroke-width="1"/>`;
+  const hull = "#0e2232", hullEdge = "#1d3b52";
+  let maxH = 0; v.lights.forEach(L => { if (L.t === "mast" || L.t === "ar") maxH = Math.max(maxH, L.h); });
+  if (side) {
+    const p = (x, y) => `${pos(x).toFixed(1)},${y}`;
+    s += `<polygon points="${p(0, WL - 13)} ${p(1, WL - 9)} ${p(1, WL)} ${p(.07, WL)}" fill="${hull}" stroke="${hullEdge}"/>`;
+    s += `<polygon points="${p(.3, WL - 13)} ${p(.62, WL - 11)} ${p(.62, WL - 22)} ${p(.34, WL - 24)}" fill="${hull}" stroke="${hullEdge}"/>`;
+    const xs = [...new Set(v.lights.filter(L => L.t === "mast" || L.t === "ar").map(L => L.x))];
+    xs.forEach(x => { const h = Math.max(...v.lights.filter(L => (L.t === "mast" || L.t === "ar") && L.x === x).map(L => L.h)); s += `<line x1="${pos(x)}" x2="${pos(x)}" y1="${WL - 12}" y2="${WL - h - 4}" stroke="${hullEdge}" stroke-width="2"/>`; });
+    if (v.sail) { const mx = pos(.42); s += `<line x1="${mx}" x2="${mx}" y1="${WL - 12}" y2="${WL - 118}" stroke="${hullEdge}" stroke-width="2"/><polygon points="${mx},${WL - 114} ${mx},${WL - 18} ${pos(.9)},${WL - 18}" fill="#0b1c29" stroke="${hullEdge}"/>`; }
+  } else if (view === "ahead") {
+    s += `<polygon points="134,${WL - 13} 186,${WL - 13} 174,${WL} 146,${WL}" fill="${hull}" stroke="${hullEdge}"/><rect x="146" y="${WL - 24}" width="28" height="11" fill="${hull}" stroke="${hullEdge}"/>`;
+    if (maxH) s += `<line x1="160" x2="160" y1="${WL - 12}" y2="${WL - maxH - 4}" stroke="${hullEdge}" stroke-width="2"/>`;
+    if (v.sail) s += `<line x1="160" x2="160" y1="${WL - 12}" y2="${WL - 118}" stroke="${hullEdge}" stroke-width="2"/>`;
+  } else {
+    s += `<rect x="138" y="${WL - 13}" width="44" height="13" fill="${hull}" stroke="${hullEdge}"/><rect x="148" y="${WL - 24}" width="24" height="11" fill="${hull}" stroke="${hullEdge}"/>`;
+    if (maxH) s += `<line x1="160" x2="160" y1="${WL - 12}" y2="${WL - maxH - 4}" stroke="${hullEdge}" stroke-width="2"/>`;
+  }
+  const dots = [];
+  for (const L of v.lights) {
+    if (L.t === "mast" && view !== "astern") dots.push([pos(L.x), L.h, "w"]);
+    if (L.t === "ar") dots.push([view === "ahead" || view === "astern" ? 160 + (L.ax || 0) : pos(L.x), L.h, L.c]);
+    if (L.t === "side") { if (view === "ahead") { dots.push([188, L.h, "r"]); dots.push([132, L.h, "g"]); } if (view === "port") dots.push([pos(L.x), L.h, "r"]); if (view === "stbd") dots.push([pos(L.x), L.h, "g"]); }
+    if (L.t === "stern" && view === "astern") dots.push([160, L.h, "w"]);
+    if (L.t === "tow" && view === "astern") dots.push([160, L.h, "y"]);
+  }
+  for (const [x, h, c] of dots) {
+    const y = WL - h;
+    s += `<rect x="${x - 1.5}" y="${WL + 3}" width="3" height="${Math.min(30, h * .35)}" fill="${LC[c]}" opacity=".18"/>`;
+    s += `<circle cx="${x}" cy="${y}" r="10" fill="${LC[c]}" opacity=".55" filter="url(#glow)"/><circle cx="${x}" cy="${y}" r="3.6" fill="${LC[c]}"/><circle cx="${x}" cy="${y}" r="1.6" fill="#fff" opacity=".85"/>`;
+  }
+  return s + "</svg>";
+}
+
+/* ---------- DAY SHAPES ---------- */
+const SHAPES = {
+  nuc: { name: "Not under command", s: ["ball", "ball"], desc: "Two black balls in a vertical line. Rule 27(a)." },
+  ram: { name: "Restricted in ability to maneuver", s: ["ball", "diamond", "ball"], desc: "Ball, diamond, ball in a vertical line. Rule 27(b)." },
+  anchor: { name: "At anchor", s: ["ball"], desc: "One black ball in the forepart. Rule 30(a)." },
+  aground: { name: "Aground", s: ["ball", "ball", "ball"], desc: "Three black balls in a vertical line. Rule 30(d)." },
+  cbd: { name: "Constrained by her draft (International)", s: ["cyl"], desc: "A black cylinder. International Rule 28 only." },
+  fish: { name: "Engaged in fishing", s: ["down", "up"], desc: "Two cones with their points together. Under 20 m may show a basket instead. Rule 26." },
+  sailpower: { name: "Under sail and also propelled by engine", s: ["down"], desc: "One cone, point downward, where it can best be seen. She is a power-driven vessel under the rules. Rule 25(e)." },
+  tow: { name: "Towing, tow longer than 200 m", s: ["diamond"], desc: "A diamond shape where it can best be seen (on both towing vessel and tow). Rule 24." }
+};
+function shapesSVG(key) {
+  const sh = SHAPES[key].s, WL = 150;
+  let s = `<svg viewBox="0 0 320 190" class="scene" role="img" aria-label="Daytime: a vessel showing day shapes"><rect width="320" height="190" fill="url(#daysky)"/>`;
+  s += `<rect y="${WL}" width="320" height="40" fill="#6f9db6"/><path d="M0 ${WL + 8} q10 -4 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0" stroke="#9cc2d6" fill="none"/>`;
+  s += `<polygon points="70,${WL - 14} 252,${WL - 10} 252,${WL} 84,${WL}" fill="#2b3c48"/><polygon points="120,${WL - 13} 190,${WL - 12} 186,${WL - 30} 126,${WL - 32}" fill="#e9eef1" stroke="#2b3c48"/>`;
+  s += `<line x1="158" x2="158" y1="${WL - 30}" y2="22" stroke="#2b3c48" stroke-width="3"/><line x1="140" x2="176" y1="34" y2="34" stroke="#2b3c48" stroke-width="2"/>`;
+  s += `<line x1="170" x2="170" y1="34" y2="${44 + sh.length * 26}" stroke="#2b3c48" stroke-width="1"/>`;
+  sh.forEach((t, i) => {
+    const x = 170, y = 52 + i * 26, k = "#121619";
+    if (t === "ball") s += `<circle cx="${x}" cy="${y}" r="9.5" fill="${k}"/>`;
+    if (t === "diamond") s += `<polygon points="${x},${y - 13} ${x + 9},${y} ${x},${y + 13} ${x - 9},${y}" fill="${k}"/>`;
+    if (t === "cyl") s += `<rect x="${x - 7}" y="${y - 11}" width="14" height="22" fill="${k}"/>`;
+    if (t === "down") s += `<polygon points="${x - 10},${y - 9} ${x + 10},${y - 9} ${x},${y + 9}" fill="${k}"/>`;
+    if (t === "up") s += `<polygon points="${x},${y - 11} ${x - 10},${y + 7} ${x + 10},${y + 7}" fill="${k}"/>`;
+  });
+  return s + "</svg>";
+}
+
+/* ---------- BUOYS ---------- */
+let UID = 0;
+const BUOYS = {
+  red: { name: "Red nun, even number", mean: "Keep it on your starboard side when returning from sea (red, right, returning)", light: "Fl R 4s" },
+  green: { name: "Green can, odd number", mean: "Keep it on your port side when returning from sea", light: "Fl G 4s" },
+  pcport: { name: "Preferred-channel mark, red band on top", mean: "Junction: the preferred channel is to port; treat it as a red mark", light: "Fl (2+1) R" },
+  pcstbd: { name: "Preferred-channel mark, green band on top", mean: "Junction: the preferred channel is to starboard; treat it as a green mark", light: "Fl (2+1) G" },
+  safe: { name: "Safe-water mark", mean: "Safe water all around: fairway or mid-channel, pass on either side", light: "Mo (A) W" },
+  iso: { name: "Isolated-danger mark", mean: "Isolated danger with navigable water all around it", light: "Fl (2) W 5s" },
+  special: { name: "Special mark", mean: "Special area or feature (anchorage, cable, dredging); not for lateral navigation", light: "Fl Y 4s" },
+  keepout: { name: "Exclusion area mark", mean: "Boats keep out: exclusion area", light: "" },
+  danger: { name: "Danger mark", mean: "Danger: rocks, wreck, shoal or dam nearby", light: "" }
+};
+function buoyG(type, ox = 0, oy = 0, sc = 1, label = true) {
+  const num = typeof label === "string" ? label : null;
+  const id = "cp" + (++UID), R = "#d42a24", G = "#169046", Y = "#f2c21b", K = "#15191c", Wt = "#f7f7f2", O = "#f07a14";
+  const nun = "M52,150 L52,104 L80,62 L108,104 L108,150 Z", can = "M54,74 L106,74 L106,150 L54,150 Z";
+  let s = `<g transform="translate(${ox} ${oy}) scale(${sc})">`;
+  const bands = (path, cols, y0, y1) => { const h = (y1 - y0) / cols.length; return `<clipPath id="${id}"><path d="${path}"/></clipPath><g clip-path="url(#${id})">` + cols.map((c, i) => `<rect x="40" y="${y0 + i * h}" width="80" height="${h + .5}" fill="${c}"/>`).join("") + `</g><path d="${path}" fill="none" stroke="#0006" stroke-width="1.2"/>`; };
+  if (type === "red") s += `<path d="${nun}" fill="${R}" stroke="#0006"/>` + (label ? `<text x="80" y="134" text-anchor="middle" font-size="22" font-weight="700" fill="#fff" style="fill:#fff">${num || 2}</text>` : "");
+  if (type === "green") s += `<path d="${can}" fill="${G}" stroke="#0006"/>` + (label ? `<text x="80" y="124" text-anchor="middle" font-size="22" font-weight="700" fill="#fff" style="fill:#fff">${num || 1}</text>` : "");
+  if (type === "pcport") s += bands(nun, [R, G, R], 62, 150);
+  if (type === "pcstbd") s += bands(can, [G, R, G], 74, 150);
+  if (type === "safe") { const p = "M80,82 a34,34 0 1,1 -0.1,0 Z"; s += `<line x1="80" y1="84" x2="80" y2="58" stroke="${K}" stroke-width="3"/><circle cx="80" cy="50" r="9" fill="${R}"/><clipPath id="${id}"><circle cx="80" cy="116" r="34"/></clipPath><g clip-path="url(#${id})">${[0, 1, 2, 3, 4, 5, 6].map(i => `<rect x="${46 + i * 10}" y="80" width="10" height="72" fill="${i % 2 ? Wt : R}"/>`).join("")}</g><circle cx="80" cy="116" r="34" fill="none" stroke="#0006"/>`; }
+  if (type === "iso") s += `<line x1="80" y1="76" x2="80" y2="30" stroke="${K}" stroke-width="3"/><circle cx="80" cy="34" r="8" fill="${K}"/><circle cx="80" cy="54" r="8" fill="${K}"/>` + bands("M62,76 L98,76 L104,150 L56,150 Z", [K, R, K], 76, 150);
+  if (type === "special") s += `<line x1="80" y1="74" x2="80" y2="50" stroke="${K}" stroke-width="3"/><path d="M71,38 L89,56 M89,38 L71,56" stroke="${Y}" stroke-width="5"/><path d="${can}" fill="${Y}" stroke="#0006"/>`;
+  if (type === "keepout" || type === "danger") { s += `<path d="${can}" fill="${Wt}" stroke="#0006"/><rect x="54" y="78" width="52" height="8" fill="${O}"/><rect x="54" y="136" width="52" height="8" fill="${O}"/><polygon points="80,93 97,111 80,129 63,111" fill="none" stroke="${O}" stroke-width="4"/>`; if (type === "keepout") s += `<path d="M71,102 L89,120 M89,102 L71,120" stroke="${O}" stroke-width="3.5"/>`; }
+  s += `<rect x="20" y="150" width="120" height="6" fill="#0002"/>`;
+  return s + "</g>";
+}
+function buoySVG(type, withLight = true) {
+  const b = BUOYS[type];
+  return `<svg viewBox="0 0 320 190" class="scene" role="img" aria-label="A navigation mark"><rect width="320" height="190" fill="url(#daysky)"/><rect y="150" width="320" height="40" fill="#6f9db6"/>${buoyG(type, 80, 0, 1)}${withLight && b.light ? `<text x="240" y="176" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" style="fill:#0c2230">${b.light}</text>` : ""}</svg>`;
+}
+
+/* ---------- SOUND ---------- */
+const SIGNALS = [
+  { p: ".", m: "I am altering my course to starboard", rule: "Rule 34(a), International, vessels in sight. (Inland: \"I intend to leave you on my port side.\")" },
+  { p: "..", m: "I am altering my course to port", rule: "Rule 34(a), International, vessels in sight. (Inland: \"I intend to leave you on my starboard side.\")" },
+  { p: "...", m: "I am operating astern propulsion", rule: "Rule 34(a): three short blasts, both International and Inland." },
+  { p: "rrrrr", m: "Danger / doubt: I don't understand your intentions", rule: "Rule 34(d): at least five short and rapid blasts." },
+  { p: "-", m: "Power-driven vessel making way in restricted visibility", rule: "Rule 35(a): one prolonged blast at intervals of not more than 2 minutes. (One prolonged is also the signal when nearing a blind bend, Rule 34(e).)" },
+  { p: "--", m: "Power-driven vessel underway but stopped, in restricted visibility", rule: "Rule 35(b): two prolonged blasts about 2 seconds apart, every 2 minutes or less." },
+  { p: "-..", m: "Sailing, fishing, towing, NUC, RAM or constrained vessel in restricted visibility", rule: "Rule 35(c): one prolonged followed by two short." },
+  { p: "-...", m: "Manned vessel being towed, in restricted visibility", rule: "Rule 35(e): one prolonged followed by three short, right after the towing vessel's signal." },
+  { p: "--.", m: "Narrow channel: I intend to overtake you on your starboard side", rule: "Rule 34(c)(i), International: two prolonged followed by one short." },
+  { p: "--..", m: "Narrow channel: I intend to overtake you on your port side", rule: "Rule 34(c)(i), International: two prolonged followed by two short." },
+  { p: "-.-.", m: "Agreement: you may overtake me", rule: "Rule 34(c)(ii), International: prolonged, short, prolonged, short." }
+];
+const patHTML = (p, cls = "pattern") => `<span class="${cls}" aria-label="${p.replace(/-/g, "prolonged ").replace(/\./g, "short ").replace(/r/g, "short ")}">${[...p].map(c => `<i class="${c === "-" ? "p" : c === "r" ? "r" : "s"}"></i>`).join("")}</span>`;
+let AC = null, PLAY = null;
+function ac() { try { if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === "suspended") AC.resume(); } catch (e) { AC = null; } return AC; }
+function stopSound() { if (!PLAY) return; try { PLAY.master.gain.cancelScheduledValues(0); PLAY.master.disconnect(); } catch (e) {} PLAY.timers.forEach(clearTimeout); PLAY.els.forEach(e => e.classList.remove("on")); PLAY = null; }
+function playPattern(p, glyphHost) {
+  const a = ac(); stopSound(); if (!a) return 0;
+  const master = a.createGain(); master.gain.value = .2; master.connect(a.destination);
+  const glyphs = glyphHost ? $$("i", glyphHost) : [];
+  let t = a.currentTime + .08; const t0 = t, timers = [];
+  [...p].forEach((c, i) => {
+    const dur = c === "-" ? 4 : c === "r" ? .55 : 1, gap = c === "-" ? 1.6 : c === "r" ? .25 : .8;
+    const g = a.createGain(), f = a.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 1100;
+    [146, 220.6, 293].forEach((fr, k) => { const o = a.createOscillator(); o.type = k === 2 ? "triangle" : "sawtooth"; o.frequency.value = fr; o.connect(f); o.start(t); o.stop(t + dur + .05); });
+    f.connect(g); g.connect(master);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.8, t + .07); g.gain.setValueAtTime(.8, t + dur - .09); g.gain.linearRampToValueAtTime(0, t + dur);
+    if (glyphs[i]) { const on = (t - t0) * 1000 + 80, off = on + dur * 1000; timers.push(setTimeout(() => glyphs[i].classList.add("on"), on), setTimeout(() => glyphs[i].classList.remove("on"), off)); }
+    t += dur + gap;
+  });
+  PLAY = { master, timers, els: glyphs };
+  return (t - t0) * 1000;
+}
+
+/* ---------- LESSON DIAGRAMS ---------- */
+const D = {};
+D.collision = () => {
+  let s = `<svg viewBox="0 0 360 230" role="img" aria-label="Head-on, crossing and overtaking situations">`;
+  [0, 120, 240].forEach(x => s += `<rect x="${x + 3}" y="28" width="114" height="170" rx="8" class="s-water"/>`);
+  s += T(60, 18, "HEAD-ON · R14", "t-lab", 'text-anchor="middle"') + T(180, 18, "CROSSING · R15", "t-lab", 'text-anchor="middle"') + T(300, 18, "OVERTAKING · R13", "t-lab", 'text-anchor="middle"');
+  s += boat(60, 172, 0) + boat(60, 56, 180);
+  s += `<path d="M60,152 Q62,122 86,110" class="l-acc" stroke-width="2.5" marker-end="url(#ah-acc)"/><path d="M60,76 Q58,106 34,118" class="l-acc" stroke-width="2.5" marker-end="url(#ah-acc)"/>`;
+  s += `<path d="M165,152 L165,70" class="l-muted" stroke-dasharray="4 4"/><path d="M215,96 L140,96" class="l-muted" stroke-dasharray="4 4" marker-end="url(#ah-muted)"/>`;
+  s += boat(165, 172, 0, "s-ink") + boat(222, 96, 270, "s-chart");
+  s += `<path d="M165,152 Q168,124 196,120 L226,118" class="l-acc" stroke-width="2.5" marker-end="url(#ah-acc)"/>`;
+  s += `<circle cx="165" cy="96" r="5" class="l-acc" stroke-width="1.5"/>`;
+  s += T(140, 192, "GIVE-WAY", "t-small") + T(196, 82, "STAND-ON", "t-small");
+  s += `<path d="${sector(300, 96, 70, 112.5, 247.5)}" class="s-acc" opacity=".14"/>`;
+  s += boat(300, 80, 0, "s-chart") + boat(300, 178, 0);
+  s += `<path d="M300,158 Q300,136 322,122 L322,62" class="l-acc" stroke-width="2.5" marker-end="url(#ah-acc)"/>`;
+  s += T(246, 150, "sternlight", "t-small") + T(246, 162, "sector 135°", "t-small");
+  s += T(180, 220, "Orange = the vessel that must act. Dashed = original courses.", "t-small", 'text-anchor="middle"');
+  return s + "</svg>";
+};
+D.risk = () => {
+  const O = [[70, 182], [70, 147], [70, 112], [70, 77]], Tg = [[290, 96], [235, 82], [180, 68], [125, 54]];
+  let s = `<svg viewBox="0 0 360 220" role="img" aria-label="Constant bearing with decreasing range means risk of collision"><rect x="0" y="0" width="360" height="220" rx="8" class="s-water" opacity=".6"/>`;
+  O.forEach((o, i) => s += `<line x1="${o[0]}" y1="${o[1]}" x2="${Tg[i][0]}" y2="${Tg[i][1]}" class="l-acc" stroke-width="1.6" stroke-dasharray="5 4" opacity="${.45 + i * .18}"/>`);
+  O.forEach((o, i) => s += boat(o[0], o[1], 0, "s-ink", .8) + T(o[0] - 34, o[1] + 4, ["0900", "0903", "0906", "0909"][i], "t-mono t-small"));
+  Tg.forEach((t, i) => s += boat(t[0], t[1], 284, "s-chart", .8));
+  s += `<circle cx="70" cy="40" r="8" class="s-acc" opacity=".25"/><circle cx="70" cy="40" r="3" class="s-acc"/>` + T(84, 36, "same spot, same time", "t-small");
+  s += T(150, 176, "Bearing 069° · 069° · 069°", "t-mono", 'transform="rotate(-21 150 176)"');
+  s += T(180, 208, "Sight lines stay parallel while the range closes", "t-small", 'text-anchor="middle"');
+  return s + "</svg>";
+};
+D.lights = () => {
+  const cx = 180, cy = 118;
+  let s = `<svg viewBox="0 0 360 236" role="img" aria-label="Arcs of visibility for navigation lights">`;
+  s += `<path d="${sector(cx, cy, 98, -112.5, 112.5)}" fill="#fff4d6" stroke="#c8b88a" stroke-width="1" opacity=".75"/>`;
+  s += `<path d="${sector(cx, cy, 70, 0, 112.5)}" class="s-stbd" opacity=".75"/><path d="${sector(cx, cy, 70, -112.5, 0)}" class="s-port" opacity=".75"/>`;
+  s += `<path d="${sector(cx, cy, 70, 112.5, 247.5)}" fill="#fff4d6" stroke="#c8b88a" opacity=".95"/>`;
+  s += boat(cx, cy, 0, "s-ink", 1.3);
+  s += T(cx, 14, "MASTHEAD 225°", "t-lab", 'text-anchor="middle"');
+  s += T(268, 70, "GREEN 112.5°", "t-lab") + T(30, 70, "RED 112.5°", "t-lab");
+  s += T(cx, 216, "STERNLIGHT 135°", "t-lab", 'text-anchor="middle"');
+  s += `<line x1="${cx}" y1="${cy}" x2="${pt(cx, cy, 116, 112.5)[0]}" y2="${pt(cx, cy, 116, 112.5)[1]}" class="l-muted" stroke-dasharray="3 3"/><line x1="${cx}" y1="${cy}" x2="${pt(cx, cy, 116, 247.5)[0]}" y2="${pt(cx, cy, 116, 247.5)[1]}" class="l-muted" stroke-dasharray="3 3"/>`;
+  s += T(cx + 104, cy + 64, "22.5° abaft", "t-small") + T(cx + 104, cy + 76, "the beam", "t-small");
+  s += T(cx, 232, "All-round lights show 360°", "t-small", 'text-anchor="middle"');
+  return s + "</svg>";
+};
+D.signals = () => {
+  let s = `<svg viewBox="0 0 360 214" role="img" aria-label="Sound signal patterns">`;
+  const rows = [[".", "1 short", "altering to starboard (Intl)"], ["..", "2 short", "altering to port (Intl)"], ["...", "3 short", "operating astern propulsion"], ["rrrrr", "5+ short", "danger / doubt"], ["-", "1 prolonged", "power, making way, in fog"], ["--", "2 prolonged", "power, stopped, in fog"], ["-..", "prolonged + 2 short", "sail, fish, tow, NUC, RAM in fog"]];
+  rows.forEach((r, i) => {
+    const y = 18 + i * 28; let x = 12;
+    [...r[0]].forEach(c => { const w = c === "-" ? 36 : c === "r" ? 8 : 11; s += `<rect x="${x}" y="${y - 6}" width="${w}" height="10" rx="5" class="s-ink"/>`; x += w + 4; });
+    s += T(110, y + 3, r[1], "t-lab") + T(214, y + 3, r[2], "t-small");
+  });
+  return s + "</svg>";
+};
+D.anchoring = () => {
+  let s = `<svg viewBox="0 0 360 210" role="img" aria-label="Anchor scope: rode length versus depth plus bow height">`;
+  s += `<rect x="0" y="62" width="360" height="148" class="s-water"/><path d="M0,184 Q120,172 220,186 T360,180 L360,210 L0,210Z" class="s-land"/>`;
+  s += `<path d="M28,48 L96,48 L88,66 L36,66Z" class="s-ink"/><rect x="46" y="36" width="26" height="12" class="s-ink"/><circle cx="96" cy="49" r="3" class="s-acc"/>`;
+  s += `<path d="M96,49 C150,120 230,176 300,180" class="l-acc" stroke-width="2.5"/>`;
+  s += `<g transform="translate(304 176)" class="l-ink" stroke-width="2.5"><path d="M0,-12 L0,8 M-9,2 Q0,12 9,2 M-5,-12 L5,-12"/></g>`;
+  s += `<line x1="104" y1="49" x2="104" y2="180" class="l-ink" stroke-dasharray="4 3" marker-start="url(#ah-ink)" marker-end="url(#ah-ink)"/>`;
+  s += T(112, 112, "depth +", "t-lab") + T(112, 126, "bow height", "t-lab");
+  s += T(196, 116, "RODE", "t-lab t-acc", 'transform="rotate(32 196 116)"');
+  s += T(6, 18, "Scope = rode ÷ (depth + bow height)", "t-lab");
+  return s + "</svg>";
+};
+D.fire = () => {
+  let s = `<svg viewBox="0 0 360 220" role="img" aria-label="Fire tetrahedron and extinguisher classes">`;
+  s += `<polygon points="90,22 166,150 14,150" class="s-acc" opacity=".16"/><polygon points="90,22 166,150 14,150" class="l-acc" stroke-width="2"/><line x1="90" y1="22" x2="90" y2="112" class="l-acc"/><line x1="14" y1="150" x2="90" y2="112" class="l-acc"/><line x1="166" y1="150" x2="90" y2="112" class="l-acc"/>`;
+  s += T(30, 92, "HEAT", "t-lab") + T(122, 92, "FUEL", "t-lab") + T(64, 170, "OXYGEN", "t-lab") + T(52, 196, "+ CHAIN REACTION", "t-lab t-acc");
+  const cls = [["A", "Ordinary combustibles", "#2e8b3e", "tri"], ["B", "Flammable liquids", "#d13a2f", "sq"], ["C", "Energized electrical", "#2563b0", "circ"], ["D", "Combustible metals", "#d9a400", "star"], ["K", "Cooking oils & fats", "#1d1d1d", "hex"]];
+  cls.forEach((c, i) => {
+    const y = 34 + i * 38, x = 210;
+    let sh = c[3] === "tri" ? `<polygon points="${x},${y - 13} ${x + 13},${y + 10} ${x - 13},${y + 10}" fill="${c[2]}"/>` : c[3] === "sq" ? `<rect x="${x - 12}" y="${y - 12}" width="24" height="24" fill="${c[2]}"/>` : c[3] === "circ" ? `<circle cx="${x}" cy="${y}" r="13" fill="${c[2]}"/>` : c[3] === "star" ? `<polygon points="${[...Array(10)].map((_, k) => { const r = k % 2 ? 6 : 14, a = k * 36; return pt(x, y, r, a).map(v => v.toFixed(1)).join(","); }).join(" ")}" fill="${c[2]}"/>` : `<polygon points="${[...Array(6)].map((_, k) => pt(x, y, 13, 30 + k * 60).map(v => v.toFixed(1)).join(",")).join(" ")}" fill="${c[2]}"/>`;
+    s += sh + `<text x="${x}" y="${y + 5}" text-anchor="middle" font-weight="700" font-size="12" style="fill:#fff">${c[0]}</text>` + T(x + 22, y + 4, c[1], "t-small");
+  });
+  return s + "</svg>";
+};
+D.mob = () => {
+  let s = `<svg viewBox="0 0 360 230" role="img" aria-label="Williamson turn for a person overboard"><rect width="360" height="230" rx="8" class="s-water" opacity=".6"/>`;
+  s += `<path d="M150,214 L150,140" class="l-ink" stroke-width="2.5"/>`;
+  s += `<path d="M150,140 Q152,112 178,100 C206,88 214,52 186,38 C160,26 140,48 146,74 L150,120" class="l-acc" stroke-width="2.5" marker-end="url(#ah-acc)"/>`;
+  s += `<circle cx="140" cy="140" r="6" class="s-port"/><circle cx="140" cy="140" r="10" class="l-ink" stroke-dasharray="2 2"/>`;
+  s += T(108, 160, "MOB", "t-lab");
+  [[160, 124, "1"], [205, 70, "2"], [134, 58, "3"]].forEach(([x, y, n]) => s += `<circle cx="${x}" cy="${y}" r="9" class="s-ink"/><text x="${x}" y="${y + 4}" text-anchor="middle" font-size="11" font-weight="700" style="fill:var(--paper)">${n}</text>`);
+  s += T(232, 120, "1  Hard over toward", "t-small") + T(244, 133, "the person's side", "t-small");
+  s += T(232, 74, "2  60° off course:", "t-small") + T(244, 87, "hard over the other way", "t-small");
+  s += T(232, 28, "3  Steady on the", "t-small") + T(244, 41, "reciprocal course", "t-small");
+  s += T(14, 22, "SHOUT · POINT · THROW · MARK", "t-lab t-acc");
+  return s + "</svg>";
+};
+D.lines = () => {
+  let s = `<svg viewBox="0 0 360 210" role="img" aria-label="Dock lines and snap-back zones">`;
+  s += `<rect x="0" y="0" width="360" height="210" class="s-water" opacity=".6"/><rect x="0" y="20" width="360" height="40" class="s-land"/>`;
+  [40, 120, 200, 280, 330].forEach(x => s += `<rect x="${x}" y="54" width="10" height="10" class="s-ink"/>`);
+  s += `<path d="M70,74 L250,74 Q300,74 318,96 Q300,118 250,118 L70,118 Q62,96 70,74Z" class="s-surface" stroke-width="2" style="stroke:var(--ink)"/>`;
+  s += `<path d="M300,82 L345,59" class="l-chart" stroke-width="2.5"/><path d="M250,80 L125,59" class="l-chart" stroke-width="2.5"/><path d="M110,80 L205,59" class="l-chart" stroke-width="2.5"/><path d="M76,86 L45,59" class="l-chart" stroke-width="2.5"/>`;
+  s += `<path d="M250,80 L125,59 L118,96 L230,112Z" class="s-port" opacity=".14"/>`;
+  s += T(316, 140, "BOW LINE", "t-lab", 'text-anchor="middle"') + T(186, 140, "SPRING LINES", "t-lab", 'text-anchor="middle"') + T(52, 140, "STERN LINE", "t-lab", 'text-anchor="middle"');
+  s += T(150, 106, "snap-back zone", "t-small");
+  s += T(14, 178, "Never fend off with hands or feet. Stay out of bights", "t-small") + T(14, 194, "and out of line with a loaded line.", "t-small");
+  return s + "</svg>";
+};
+D.systems = () => {
+  const box = (x, y, w, t, warn) => `<rect x="${x}" y="${y}" width="${w}" height="34" rx="6" class="s-surface" style="stroke:${warn ? "var(--accent)" : "var(--ink)"}" stroke-width="${warn ? 2 : 1.2}"/><text x="${x + w / 2}" y="${y + 21}" text-anchor="middle" font-size="12" font-weight="600">${t}</text>`;
+  let s = `<svg viewBox="0 0 360 220" role="img" aria-label="Raw-water cooling circuit">`;
+  s += `<rect x="0" y="176" width="360" height="44" class="s-water"/>` + T(10, 206, "SEA", "t-lab");
+  s += box(16, 128, 80, "Seacock", true) + box(16, 64, 80, "Strainer", true) + box(132, 14, 96, "Pump impeller", true) + box(264, 64, 84, "Heat exch.", false) + box(264, 128, 84, "Exhaust elbow", false);
+  s += `<path d="M56,176 L56,164" class="l-chart" stroke-width="2.5" marker-end="url(#ah-chart)"/><path d="M56,128 L56,100" class="l-chart" stroke-width="2.5" marker-end="url(#ah-chart)"/><path d="M56,64 L56,31 L130,31" class="l-chart" stroke-width="2.5" marker-end="url(#ah-chart)"/><path d="M228,31 L306,31 L306,62" class="l-chart" stroke-width="2.5" marker-end="url(#ah-chart)"/><path d="M306,98 L306,126" class="l-chart" stroke-width="2.5" marker-end="url(#ah-chart)"/><path d="M306,162 L306,186" class="l-chart" stroke-width="2.5" marker-end="url(#ah-chart)"/>`;
+  s += T(116, 92, "Orange = common", "t-small") + T(116, 106, "overheating causes", "t-small") + T(116, 132, "Check: water flowing", "t-small") + T(116, 146, "out with the exhaust", "t-small");
+  return s + "</svg>";
+};
+D.stability = () => {
+  const G = [180, 110], M = [203.9, 44.2], B = [203.9, 140];
+  let s = `<svg viewBox="0 0 360 220" role="img" aria-label="Heeled hull with G, B, M and righting arm GZ">`;
+  s += `<g transform="rotate(20 180 110)"><path d="M120,80 L240,80 L236,128 Q228,150 180,156 Q132,150 124,128Z" class="s-surface" stroke-width="2" style="stroke:var(--ink)"/><line x1="180" y1="30" x2="180" y2="160" class="l-muted" stroke-dasharray="4 3"/></g>`;
+  s += `<rect x="0" y="122" width="360" height="98" class="s-water" opacity=".75"/><line x1="0" y1="122" x2="360" y2="122" class="l-chart" stroke-width="1.5"/>`;
+  s += `<line x1="${B[0]}" y1="${B[1]}" x2="${M[0]}" y2="${M[1] - 4}" class="l-good" style="stroke:var(--good)" stroke-width="2" marker-end="url(#ah-good)"/>`;
+  s += `<line x1="${G[0]}" y1="${G[1]}" x2="${G[0]}" y2="${G[1] + 60}" class="l-acc" stroke-width="2" marker-end="url(#ah-acc)"/>`;
+  s += `<line x1="${G[0]}" y1="${G[1]}" x2="${B[0]}" y2="${G[1]}" class="l-ink" stroke-width="3"/>`;
+  [[G, "G"], [B, "B"], [M, "M"], [[B[0], G[1]], "Z"]].forEach(([p, l]) => s += `<circle cx="${p[0]}" cy="${p[1]}" r="4" class="s-ink"/>` + T(p[0] + 7, p[1] - 6, l, "t-lab"));
+  s += T(14, 24, "G gravity · B buoyancy · M metacenter", "t-small") + T(14, 40, "GZ = righting arm", "t-small");
+  s += T(240, 200, "Weight high → G rises → GZ shrinks", "t-small", 'text-anchor="middle"');
+  return s + "</svg>";
+};
+D.compass = () => {
+  let s = `<svg viewBox="0 0 360 200" role="img" aria-label="True, variation, magnetic, deviation, compass">`;
+  const items = [["T", "True"], ["V", "Variation"], ["M", "Magnetic"], ["D", "Deviation"], ["C", "Compass"]];
+  items.forEach((it, i) => { const x = 14 + i * 70; s += `<rect x="${x}" y="40" width="58" height="58" rx="8" class="${i % 2 ? "s-surface" : "s-ink"}" style="stroke:var(--ink)" stroke-width="1.5"/><text x="${x + 29}" y="80" text-anchor="middle" font-size="26" font-weight="700" font-family="Barlow Condensed, sans-serif" style="fill:${i % 2 ? "var(--ink)" : "var(--paper)"}">${it[0]}</text>` + T(x + 29, 116, it[1], "t-small", 'text-anchor="middle"'); });
+  s += `<path d="M20,140 L340,140" class="l-acc" stroke-width="2.5" marker-end="url(#ah-acc)"/>` + T(20, 160, "T → C (down): add West, subtract East", "t-lab t-acc");
+  s += `<path d="M340,178 L20,178" class="l-chart" stroke-width="2.5" marker-end="url(#ah-chart)"/>` + T(340, 196, "C → T (up): add East (\"correcting add East\")", "t-lab", 'text-anchor="end" style="fill:var(--chart)"');
+  s += T(14, 24, "True Virgins Make Dull Companions", "t-lab");
+  return s + "</svg>";
+};
+D.buoys = () => {
+  let s = `<svg viewBox="0 0 360 230" role="img" aria-label="Red, right, returning: green cans to port and red nuns to starboard when returning from sea"><rect width="360" height="230" class="s-water"/>`;
+  s += `<rect x="0" y="0" width="40" height="230" class="s-land"/><rect x="320" y="0" width="40" height="230" class="s-land"/>`;
+  s += buoyG("green", 30, -38, .55, "3") + buoyG("red", 230, -38, .55, "4") + buoyG("green", 30, 70, .55, "1") + buoyG("red", 230, 70, .55, "2");
+    s += boat(180, 190, 0, "s-ink", 1.1) + `<path d="M180,166 L180,40" class="l-acc" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#ah-acc)"/>`;
+  s += T(194, 140, "RETURNING", "t-lab t-acc") + T(194, 154, "FROM SEA", "t-lab t-acc");
+  return s + "</svg>";
+};
+D.tides = () => tidesSVG(10, 3, 6);
+function tidesSVG(chart, tide, draft) {
+  const k = 7, Y0 = 92, bottom = Y0 + chart * k, surf = Y0 - tide * k, keel = surf + draft * k, clr = chart + tide - draft;
+  let s = `<svg viewBox="0 0 360 260" role="img" aria-label="Charted depth plus tide height minus draft equals clearance">`;
+  s += `<rect x="0" y="${surf}" width="360" height="${Math.max(0, bottom - surf)}" class="s-water"/><rect x="0" y="${bottom}" width="360" height="${Math.max(4, 260 - bottom)}" class="s-land"/>`;
+  s += `<line x1="0" y1="${Y0}" x2="360" y2="${Y0}" class="l-chart" stroke-dasharray="6 4" stroke-width="1.5"/><line x1="10" y1="14" x2="34" y2="14" class="l-chart" stroke-dasharray="6 4" stroke-width="1.5"/>` + T(40, 18, "chart datum (MLLW)", "t-small");
+  s += `<path d="M150,${surf - 12} L250,${surf - 12} L242,${keel} L158,${keel}Z" class="s-ink" opacity=".9"/>`;
+  const arrow = (x, y1, y2, cls, mk) => Math.abs(y2 - y1) > 3 ? `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" class="${cls}" stroke-width="2" marker-start="url(#${mk})" marker-end="url(#${mk})"/>` : "";
+  s += arrow(78, Y0, bottom, "l-ink", "ah-ink") + T(86, (Y0 + bottom) / 2 + 4, `charted ${chart} ft`, "t-mono");
+  s += arrow(30, surf, Y0, "l-chart", "ah-chart") + T(10, Math.min(surf, Y0) - 8, `tide ${tide >= 0 ? "+" : ""}${tide} ft`, "t-mono");
+  s += arrow(264, surf, keel, "l-ink", "ah-ink") + T(272, (surf + keel) / 2 + 4, `draft ${draft} ft`, "t-mono");
+  if (clr > 0) s += arrow(200, keel, bottom, "l-acc", "ah-acc");
+  s += T(208, Math.min(250, (keel + bottom) / 2 + 4), clr > 0 ? `clearance ${clr} ft` : `aground by ${-clr} ft`, "t-mono t-acc");
+  return s + "</svg>";
+}
+D.weather = () => {
+  let s = `<svg viewBox="0 0 360 220" role="img" aria-label="Weather front symbols and barometer trend">`;
+  const fronts = [["COLD FRONT", "#2563b0", "tri"], ["WARM FRONT", "#d13a2f", "semi"], ["OCCLUDED", "#7c3aed", "both"], ["STATIONARY", "", "alt"]];
+  fronts.forEach((f, i) => {
+    const y = 26 + i * 34; s += T(10, y + 4, f[0], "t-lab");
+    const col = f[1] || "#2563b0"; s += `<line x1="104" y1="${y}" x2="234" y2="${y}" stroke="${col}" stroke-width="3"/>`;
+    for (let j = 0; j < 5; j++) { const x = 112 + j * 25, alt = j % 2, c = f[2] === "alt" ? (alt ? "#d13a2f" : "#2563b0") : col;
+      const tri = f[2] === "tri" || (f[2] === "both" && !alt) || (f[2] === "alt" && !alt);
+      if (tri) s += `<polygon points="${x},${y} ${x + 12},${y} ${x + 6},${y - 10}" fill="${c}"/>`;
+      else { const up = f[2] === "alt" ? 1 : -1; s += `<path d="M${x},${y} A6,6 0 0 ${up > 0 ? 0 : 1} ${x + 12},${y}" fill="${c}" transform="${up > 0 ? `rotate(180 ${x + 6} ${y})` : ""}"/>`; } }
+  });
+  s += `<rect x="252" y="12" width="98" height="120" rx="8" class="s-surface" style="stroke:var(--line)"/>` + T(262, 30, "BAROMETER", "t-lab");
+  s += `<polyline points="262,52 278,54 294,58 310,70 326,92 340,112" class="l-acc" stroke-width="2.5"/>` + T(262, 126, "falling fast", "t-small");
+  s += T(10, 172, "Cold front: sharp wind shift, squalls, then clearing and cooler.", "t-small") + T(10, 188, "Warm front: lowering clouds, steady rain, poor visibility.", "t-small");
+  s += T(10, 208, "Back to the wind (N. hemisphere): low pressure is on your left.", "t-small");
+  return s + "</svg>";
+};
+D.charts = () => {
+  let s = `<svg viewBox="0 0 360 220" role="img" aria-label="Measuring distance on the latitude scale with dividers"><rect width="360" height="220" class="s-water" opacity=".5"/>`;
+  s += `<rect x="300" y="10" width="34" height="200" class="s-surface" style="stroke:var(--ink)"/>`;
+  for (let m = 0; m <= 18; m++) { const y = 200 - m * 10.5; s += `<line x1="300" x2="${m % 5 ? 310 : 318}" y1="${y}" y2="${y}" class="l-ink"/>`; if (m % 5 === 0) s += T(336, y + 4, (18 + m) + "'", "t-mono t-small"); }
+  const a = [292, 200 - 2 * 10.5], b = [292, 200 - 15.5 * 10.5];
+  s += `<path d="M${a[0]},${a[1]} L230,${(a[1] + b[1]) / 2} L${b[0]},${b[1]}" class="l-acc" stroke-width="3"/><circle cx="230" cy="${(a[1] + b[1]) / 2}" r="5" class="s-acc"/>`;
+  s += T(18, 34, "1' of latitude = 1 nautical mile", "t-lab") + T(18, 54, "Measure on the LATITUDE scale,", "t-small") + T(18, 68, "level with your course line.", "t-small") + T(18, 82, "Never use the longitude scale.", "t-small");
+  s += T(18, 132, "36°20.0'N → 36°33.5'N", "t-mono") + T(18, 150, "= 13.5' = 13.5 nm", "t-mono t-acc");
+  return s + "</svg>";
+};
+D.lop = () => {
+  const F = [190, 120];
+  let s = `<svg viewBox="0 0 360 220" role="img" aria-label="Fix from two crossed lines of position"><rect width="360" height="220" class="s-water" opacity=".6"/><path d="M0,0 L360,0 L360,40 Q250,58 170,34 Q90,14 0,52Z" class="s-land"/>`;
+  s += `<path d="M70,34 l-7,-22 l14,0z" class="s-ink"/><circle cx="70" cy="12" r="4" class="s-acc"/>` + T(30, 60, "Light ▲", "t-small");
+  s += `<rect x="296" y="26" width="10" height="20" class="s-ink"/>` + T(270, 62, "Tower", "t-small");
+  const line = (p, q) => { const dx = p[0] - q[0], dy = p[1] - q[1]; return `<line x1="${p[0]}" y1="${p[1]}" x2="${q[0] - dx * .45}" y2="${q[1] - dy * .45}" class="l-ink" stroke-width="1.8"/>`; };
+  s += line([70, 34], F) + line([301, 46], F);
+  s += `<circle cx="${F[0]}" cy="${F[1]}" r="7" class="l-acc" stroke-width="2.5"/><circle cx="${F[0]}" cy="${F[1]}" r="2" class="s-acc"/>` + T(F[0] + 12, F[1] + 18, "1030 FIX", "t-lab t-acc");
+  s += T(110, 64, "1030", "t-mono", 'transform="rotate(37 110 64)"') + T(112, 92, "315", "t-mono", 'transform="rotate(37 112 92)"');
+  s += T(230, 86, "1030", "t-mono", 'transform="rotate(-34 230 86)"') + T(246, 106, "057", "t-mono", 'transform="rotate(-34 246 106)"');
+  s += T(14, 206, "Time above the line, bearing below. Best crossing angle: 90°.", "t-small");
+  return s + "</svg>";
+};
+D.dr = () => {
+  let s = `<svg viewBox="0 0 360 200" role="img" aria-label="Dead reckoning plot with hourly DR positions"><rect width="360" height="200" class="s-water" opacity=".6"/>`;
+  const p0 = [30, 160], dir = [80, -36];
+  s += `<line x1="${p0[0]}" y1="${p0[1]}" x2="${p0[0] + dir[0] * 3.9}" y2="${p0[1] + dir[1] * 3.9}" class="l-ink" stroke-width="2"/>`;
+  s += `<circle cx="${p0[0]}" cy="${p0[1]}" r="7" class="l-acc" stroke-width="2.5"/>` + T(14, 186, "0900 FIX", "t-lab t-acc");
+  for (let i = 1; i <= 3; i++) { const x = p0[0] + dir[0] * i, y = p0[1] + dir[1] * i; s += `<path d="M${x - 7},${y + 2} A7,7 0 0 1 ${x + 7},${y + 2}" class="l-ink" stroke-width="2"/><line x1="${x - 8}" x2="${x + 8}" y1="${y + 2}" y2="${y + 2}" class="l-ink"/>` + T(x - 8, y + 22, `${9 + i}00 DR`, "t-mono t-small"); }
+  s += T(80, 112, "C 066  S 8.0", "t-mono", 'transform="rotate(-24 80 112)"');
+  s += `<circle cx="${p0[0] + dir[0] * 3 + 14}" cy="${p0[1] + dir[1] * 3 + 28}" r="7" class="l-chart" stroke-width="2.2"/>` + T(p0[0] + dir[0] * 3 + 26, p0[1] + dir[1] * 3 + 32, "1200 fix: the", "t-small") + T(p0[0] + dir[0] * 3 + 26, p0[1] + dir[1] * 3 + 45, "current set you", "t-small");
+  s += T(14, 20, "Fix ○   DR ◡   EP □", "t-lab");
+  return s + "</svg>";
+};
+D.current = () => currentSVG(0, 6, 90, 2);
+function currentSVG(h, sp, set, dr) {
+  const bx = sp * Math.sin(h * Math.PI / 180), by = sp * Math.cos(h * Math.PI / 180), cx = dr * Math.sin(set * Math.PI / 180), cy = dr * Math.cos(set * Math.PI / 180);
+  const pts = [[0, 0], [bx, by], [bx + cx, by + cy]];
+  const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+  const span = Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys), 1);
+  const k = Math.min(260 / Math.max(Math.max(...xs) - Math.min(...xs), 1), 150 / Math.max(Math.max(...ys) - Math.min(...ys), 1), 30);
+  const midx = (Math.max(...xs) + Math.min(...xs)) / 2, midy = (Math.max(...ys) + Math.min(...ys)) / 2;
+  const P = p => [180 + (p[0] - midx) * k, 104 - (p[1] - midy) * k];
+  const [o, b, g] = pts.map(P);
+  const cog = norm(Math.atan2(bx + cx, by + cy) * 180 / Math.PI), sog = Math.hypot(bx + cx, by + cy);
+  let s = `<svg viewBox="0 0 360 220" role="img" aria-label="Current vector triangle"><rect width="360" height="220" class="s-water" opacity=".55"/>`;
+  s += `<line x1="${o[0]}" y1="${o[1]}" x2="${b[0]}" y2="${b[1]}" class="l-ink" stroke-width="2.5" marker-end="url(#ah-ink)"/>`;
+  if (dr > 0) s += `<line x1="${b[0]}" y1="${b[1]}" x2="${g[0]}" y2="${g[1]}" class="l-chart" stroke-width="2.5" stroke-dasharray="6 3" marker-end="url(#ah-chart)"/>`;
+  s += `<line x1="${o[0]}" y1="${o[1]}" x2="${g[0]}" y2="${g[1]}" class="l-acc" stroke-width="3" marker-end="url(#ah-acc)"/>`;
+  s += `<circle cx="${o[0]}" cy="${o[1]}" r="4" class="s-ink"/>`;
+  s += T(10, 18, "BOAT (heading & speed)", "t-lab") + T(10, 34, "CURRENT (set & drift)", "t-lab", 'style="fill:var(--chart)"') + T(10, 50, "TRACK OVER GROUND", "t-lab t-acc");
+  s += T(10, 210, `COG ${pad3(cog)}°T   SOG ${sog.toFixed(2)} kn`, "t-mono t-acc");
+  return s + "</svg>";
+}
+D.eta = () => {
+  let s = `<svg viewBox="0 0 360 210" role="img" aria-label="Distance, speed, time triangle">`;
+  s += `<polygon points="110,18 200,170 20,170" class="s-surface" style="stroke:var(--ink)" stroke-width="2"/><line x1="56" y1="108" x2="164" y2="108" class="l-ink" stroke-width="2"/><line x1="110" y1="108" x2="110" y2="170" class="l-ink" stroke-width="2"/>`;
+  s += `<text x="110" y="88" text-anchor="middle" font-size="30" font-weight="700" font-family="Barlow Condensed, sans-serif" style="fill:var(--accent)">D</text><text x="78" y="152" text-anchor="middle" font-size="26" font-weight="700" font-family="Barlow Condensed, sans-serif">S</text><text x="142" y="152" text-anchor="middle" font-size="26" font-weight="700" font-family="Barlow Condensed, sans-serif">T</text>`;
+  s += T(222, 50, "D = S × T", "t-mono") + T(222, 74, "S = D ÷ T", "t-mono") + T(222, 98, "T = D ÷ S", "t-mono");
+  s += T(222, 132, "nm · knots · hours", "t-small") + T(222, 156, "6-minute rule:", "t-lab") + T(222, 172, "6 min run = speed ÷ 10", "t-small");
+  s += T(20, 200, "Cover the one you want; the other two show the math.", "t-small");
+  return s + "</svg>";
+};
+
+/* ---------- LESSONS ---------- */
+const LESSONS = [
+  { id: "collision", mod: "Q100", title: "Crossing, meeting and overtaking", core: "Decide which encounter it is before choosing an action. Overtaking beats every other situation; head-on vessels both go to starboard; in a crossing, the vessel with the other on her starboard side gives way.",
+    points: ["Overtaking (Rule 13) wins over head-on and crossing. You are overtaking when coming up from more than 22.5° abaft the other vessel's beam: at night you'd see only her sternlight. Keep clear until finally past and clear.", "Head-on (Rule 14): power-driven vessels on reciprocal or nearly reciprocal courses each alter to starboard and pass port-to-port.", "Crossing (Rule 15): the vessel that has the other on her own starboard side keeps out of the way and avoids crossing ahead.", "Stand-on vessel (Rule 17) keeps course and speed, may act once the give-way vessel is clearly not acting, and must act when collision can't be avoided by the give-way vessel alone.", "Sailing vessels (Rule 12): wind on port keeps clear of wind on starboard. Same tack: windward keeps clear of leeward. A sailboat under engine is a power-driven vessel (Rule 3).", "Rule 18 pecking order: not under command → restricted in ability to maneuver → constrained by draft → fishing → sailing → power-driven. It doesn't override Rules 9, 10 and 13."],
+    mnemo: "\"If to starboard red appear, 'tis your duty to keep clear.\"" },
+  { id: "risk", mod: "Q100", title: "Assessing collision risk", core: "Keep a proper lookout (Rule 5), go at a safe speed (Rule 6), assume risk exists if in doubt (Rule 7), and take early, substantial action (Rule 8).",
+    points: ["Lookout: by sight, hearing and all available means, including radar and AIS, at all times.", "Safe speed factors: visibility, traffic density, maneuverability and stopping distance, background lights at night, wind, sea and current, draft versus depth, and radar limitations.", "A compass bearing that doesn't appreciably change while the range closes means risk of collision. Even a changing bearing can carry risk with a large vessel, a tow or at close range.", "Don't make assumptions from scanty information, especially scanty radar information.", "Action to avoid collision must be positive, made in good time and large enough to be readily apparent. Avoid a succession of small alterations.", "Check the effect of your action until the other vessel is finally past and clear. Slow, stop or reverse if you need more time."],
+    mnemo: "Constant bearing + decreasing range = collision course." },
+  { id: "lights", mod: "Q100", title: "Navigation lights and day shapes", core: "Identify a vessel from all the lights you can see: the color, the arrangement and the arc tell you her type, size, status and which way she's heading.", widget: "lights",
+    points: ["Arcs: masthead 225° white (forward); sidelights 112.5° each, red to port and green to starboard; sternlight 135° white; all-round 360°. Towing light is yellow, 135°, above the sternlight.", "Power-driven: masthead, sidelights, sternlight. 50 m or more adds a second masthead light aft and higher. Under 12 m may show an all-round white plus sidelights.", "Sailing: sidelights and sternlight only. Under 20 m may combine them in one tricolor lantern at the masthead.", "Not under command: two all-round reds; two black balls by day. Restricted in ability to maneuver: red-white-red; ball-diamond-ball.", "Trawling: green over white. Other fishing: red over white. By day, two cones points together. Pilot on duty: white over red.", "At anchor: all-round white forward (and a lower one aft if 50 m+); one ball by day. Aground: anchor lights + two reds; three balls by day. Constrained by draft (International): three reds or a cylinder."],
+    mnemo: "Red over red, the captain is dead · Red over white, fishing at night · Green over white, trawling at night · White over red, pilot ahead." },
+  { id: "signals", mod: "Q100", title: "Sound signals and restricted visibility", core: "Short blast ≈ 1 second, prolonged blast 4–6 seconds. Maneuvering signals are for vessels in sight; fog signals (Rule 35) are for restricted visibility.", widget: "signals",
+    points: ["International, in sight: 1 short = altering to starboard; 2 short = altering to port; 3 short = operating astern propulsion.", "Inland: 1 short and 2 short state an intention (\"I intend to leave you on my port / starboard side\") and are answered with the same signal to agree.", "Danger or doubt: at least five short and rapid blasts. Approaching a blind bend: one prolonged blast, answered by one prolonged.", "In restricted visibility, at intervals of not more than 2 minutes: power making way — one prolonged; underway but stopped — two prolonged; sailing, fishing, towing, NUC, RAM, constrained — one prolonged + two short; manned tow — one prolonged + three short.", "At anchor: ring the bell rapidly for about 5 seconds every minute. Aground: three separate strokes, rapid ringing, then three strokes.", "Rule 19 (not in sight of one another): there is no stand-on vessel. Avoid altering to port for a vessel forward of the beam (unless overtaking it), and avoid turning toward a vessel abeam or abaft the beam. Hear a fog signal forward of the beam? Slow to bare steerageway."],
+    mnemo: "Tap a signal below to hear it." },
+  { id: "anchoring", mod: "Q170", title: "Anchoring and scope", core: "Scope is total rode length divided by the vertical distance from the bow roller to the seabed. The right scope depends on gear, holding ground, depth, conditions and swinging room.", widget: "anchoring",
+    points: ["Use depth at high water plus bow height, not charted depth alone.", "Common rules of thumb: about 7:1 for rope rode in normal conditions, 5:1 in a crowded, settled anchorage, more as wind and sea build. All-chain rode can hold at shorter scope.", "Pick good holding (sand or mud), enough room to swing with every boat around you, and protection from the forecast wind.", "Set the anchor with gentle sternway, then confirm it's holding with fixed bearings or a GPS anchor alarm.", "Watch for dragging: bearings that change, or a GPS track that drifts away from your swing circle.", "Use a snubber and chafe protection. Show an anchor light at night and a black ball by day."],
+    mnemo: "10 ft depth + 4 ft bow = 14 ft × 7 = 98 ft of rode." },
+  { id: "fire", mod: "Q170", title: "Fire prevention and response", core: "Fire needs heat, fuel, oxygen and a chain reaction. Remove one and it stops. Raise the alarm, protect people, isolate fuel and power when safe, then fight it with the right extinguisher.",
+    points: ["Class A: ordinary combustibles (wood, paper, cloth). Class B: flammable liquids (fuel, oil). Class C: energized electrical. Class D: combustible metals. Class K: cooking oils and fats.", "First priorities: sound the alarm, account for everyone, shut off fuel and electrical sources if safe, close off the space to starve it of air.", "Use an extinguisher approved for the hazard. Technique: Pull the pin, Aim at the base, Squeeze, Sweep (PASS).", "Gasoline vapor is heavier than air and settles in bilges. Run the blower at least 4 minutes before starting a gasoline inboard, and never start if you smell fuel.", "Batteries release flammable hydrogen while charging: ventilate and avoid sparks.", "Prepare to abandon ship if the fire can't be controlled: PFDs on, distress call made, liferaft or dinghy ready."],
+    mnemo: "PASS: Pull · Aim · Squeeze · Sweep." },
+  { id: "mob", mod: "Q170", title: "Person overboard and distress calls", core: "Raise the alarm, keep the person in sight, throw flotation and mark the spot, then maneuver back under control and recover safely. Tailor the method to wind, sea and your boat.",
+    points: ["Shout \"Man overboard!\" and the side. Assign someone to point at the person continuously. Throw a ring or cushion and press the GPS MOB button.", "Williamson turn: hard over toward the person's side, at 60° off course go hard over the other way, and come to the reciprocal course. Good at night or in poor visibility. If the person is in sight, a quick single turn may be faster.", "Approach from downwind, stop the propeller near the person and keep the prop away from them. Treat for hypothermia: handle gently, keep the casualty horizontal.", "MAYDAY = grave and imminent danger. PAN-PAN = urgency without immediate danger. SÉCURITÉ = safety message (navigation, weather).", "Call on VHF channel 16 (156.8 MHz) or press the DSC distress button (channel 70). Give: MAYDAY ×3, vessel name ×3, position, nature of distress, help needed, number aboard, vessel description.", "A 406 MHz EPIRB sends a distress alert and position when activated; it supplements the radio call. Brief passengers on PFDs, emergency signals and where to go."],
+    mnemo: "MAYDAY · position · nature · help needed · persons aboard." },
+  { id: "lines", mod: "Q170", title: "Line handling and docking", core: "Keep out of line bights and snap-back zones and never put a hand or foot between the boat and the dock. Brief the crew, account for wind and current, and have an abort plan.",
+    points: ["Bowline: a fixed loop that won't slip. Cleat hitch: secures a line to a cleat. Clove hitch: quick, temporary. Round turn and two half hitches: around a piling or rail. Sheet bend: joins two lines. Figure-eight: stopper knot.", "Line terms: bitter end (the very end), standing part (the inactive part), bight (a loop or curve), working end (the part used to tie).", "Dock lines: bow line, stern line, and spring lines that stop the boat moving forward and aft.", "Approach slowly, into the wind or current where possible. Use the least power that keeps control.", "Prop walk: a right-hand propeller walks the stern to port in reverse. The pivot point moves as the boat moves.", "Protect lines from chafe where they cross the rail or a chock."],
+    mnemo: "Slow is pro: never approach faster than you want to hit the dock." },
+  { id: "systems", mod: "Q170", added: true, title: "Engines and electrical", core: "Most engine trouble afloat is cooling, fuel or electrical. A pre-start check and attention to gauges stop small faults from becoming emergencies.",
+    points: ["Before starting: bilge (water, fuel smell), oil and coolant levels, belts, raw-water seacock open and strainer clear, steering, battery state. Gasoline: blower 4 minutes.", "Diesel = compression ignition. Gasoline = spark ignition.", "Overheating: check for a closed seacock, clogged strainer, failed impeller, loose belt or bad thermostat. Little or no water from the exhaust is an early warning.", "Low oil pressure: reduce load or shut down promptly, then diagnose. Never rev the engine to \"force\" pressure up.", "Power: P = V × I (watts = volts × amps). Fuses and breakers protect wiring from overcurrent.", "Enclosed spaces can hold fumes or lack oxygen: ventilate and have a rescue plan before entering."],
+    mnemo: "Water out the exhaust = cooling water flowing." },
+  { id: "stability", mod: "Q170", added: true, title: "Stability, weather handling and rules", core: "Keep weight low and secured, avoid free surface, keep openings closed, and manage heavy weather early. Know what your credential and vessel allow.",
+    points: ["G = center of gravity, B = center of buoyancy, M = metacenter. The righting arm GZ brings the boat back upright.", "Weight added high raises G and reduces stability. Passengers crowding to one side do the same.", "Free-surface effect: liquid sloshing in a partly full tank or flooded bilge reduces stability.", "Heavy weather: check the forecast, reduce speed early, secure gear, close hatches, take seas at an angle and avoid broaching in following seas.", "OUPV (six-pack): up to six passengers for hire on an uninspected vessel. Know your route, tonnage and credential limits.", "No oil discharge (report spills to the National Response Center) and no plastic overboard anywhere. Use the Coast Pilot and current charts for passage planning."],
+    mnemo: "Low and tight: weight low, gear tied, tanks full or empty." },
+  { id: "compass", mod: "Q171", title: "True, magnetic and compass", core: "Variation (from the chart's compass rose) and deviation (from your boat's deviation card) convert between true, magnetic and compass headings. Easterly errors are added going from compass to true.", widget: "compass",
+    points: ["Variation: the angle between true north and magnetic north. It depends on location and year and is printed on the compass rose.", "Deviation: the error caused by your own vessel's magnetism. It changes with heading and comes from the deviation card.", "Going up from Compass to True: add East, subtract West. Going down from True to Compass: add West, subtract East.", "Worked: compass 087°, deviation 2°W, variation 12°E → magnetic 085° → true 097°.", "Reverse: true 252°, variation 11°E, deviation 2°W → magnetic 241° → compass 243°.", "A reciprocal bearing is ±180°: a bearing of 045° from you to a light is 225° from the light to you."],
+    mnemo: "True Virgins Make Dull Companions (Add Whiskey)." },
+  { id: "buoys", mod: "Q171", title: "U.S. aids to navigation", core: "In U.S. waters (IALA Region B), red marks are kept on your starboard side when returning from sea. Shape, color, number and light all tell you what a mark means.", widget: "buoys",
+    points: ["Red nuns: even numbers, red lights, on your starboard side returning. Green cans: odd numbers, green lights, on your port side. Numbers increase from seaward.", "Preferred-channel (junction) marks: the color of the top band tells you how to treat the mark. Red on top means the preferred channel is to port.", "Safe-water mark: red and white vertical stripes, red ball topmark, Morse A white light. Navigable water all around.", "Isolated-danger mark: black with red bands, two black ball topmarks, Fl(2) white light. Danger directly under it, safe water around.", "Special marks are yellow. Information and regulatory marks are white with orange shapes: diamond = danger, diamond with cross = keep out, circle = controlled area, square = information.", "Light abbreviations: F fixed, Fl flashing, Q quick, Iso equal light and dark, Oc occulting (more light than dark), Mo(A) Morse A. Fl(2) 10s = group of two flashes every 10 seconds."],
+    mnemo: "Red, Right, Returning." },
+  { id: "tides", mod: "Q171", title: "Tides and water depth", core: "Depth of water ≈ charted depth + height of tide. Subtract your draft to get static clearance, then leave margin for squat, waves, heel and chart error.", widget: "tides",
+    points: ["U.S. chart soundings refer to Mean Lower Low Water (MLLW). A negative tide means less water than charted.", "Check the units in the chart title: feet, fathoms or meters.", "Semidiurnal: two highs and two lows each lunar day (about 24 h 50 min). Diurnal: one of each. Mixed: two of each at unequal heights.", "Spring tides (bigger range) come near new and full moon. Neap tides (smaller range) come near the first and third quarter.", "Rule of Twelfths: in each hour of a ~6-hour tide, the water moves 1, 2, 3, 3, 2, 1 twelfths of the range.", "Tidal current tables give the time, direction and rate of the current; a tide table gives heights."],
+    mnemo: "Depth = charted + tide. Clearance = depth − draft." },
+  { id: "weather", mod: "Q171", title: "Marine weather", core: "Read pressure tendency, wind shifts, cloud and visibility together, check official forecasts, and have a plan B for fog, squalls and thunderstorms.",
+    points: ["A falling barometer points to an approaching low and worsening weather; a rapid fall means strong wind is coming.", "Cold front: sharp wind shift, squalls and showers, then clearing and cooler air. Warm front: lowering clouds, steady rain, poor visibility.", "Advection fog: warm, moist air moving over colder water (common at sea). Radiation fog: clear, calm nights cooling the land; it can drift into harbors.", "Sea breeze: land heats by day and draws an onshore breeze in the afternoon.", "Thunderstorms bring lightning, gust fronts, sudden wind shifts and poor visibility. Watch radar and NOAA Weather Radio.", "Buys Ballot's law (Northern Hemisphere): stand with your back to the wind and low pressure is on your left."],
+    mnemo: "Falling glass, coming blast." },
+  { id: "charts", mod: "Q171", added: true, title: "Charts, publications and electronics", core: "Measure distance on the latitude scale, read the chart's title block for datum and units, keep publications current, and treat GPS, radar and AIS as aids, not guarantees.",
+    points: ["One minute of latitude = one nautical mile. Measure on the latitude scale at the same latitude as your course. Never use the longitude scale.", "The title block lists chart datum, sounding units and horizontal datum. A GPS set to a different datum can put you off by a noticeable distance.", "Compass rose: outer ring true, inner ring magnetic, with variation, year and annual change.", "Coast Pilot: narrative local information. Light List: lights and aids. Local Notice to Mariners: corrections. Tide and tidal current tables.", "Radar can miss small targets in sea clutter or rain. Many small boats don't transmit AIS. Keep a lookout regardless.", "Danger bearing: a pre-plotted bearing on a landmark that keeps you clear of a hazard."],
+    mnemo: "Latitude for length." },
+  { id: "lop", mod: "Q172", title: "Lines of position and fixes", core: "A bearing on a charted landmark gives a line of position. Two or more taken at the same time cross at a fix. Plot the reciprocal bearing from the mark.",
+    points: ["LOP: you are somewhere along this line. Label time above the line and bearing (three digits) below.", "Fix: two or more simultaneous LOPs. Best angle between two is 90°; with three, about 120°.", "Three LOPs that don't meet form a cocked hat: assume you're at the corner closest to danger.", "Running fix: advance an earlier LOP by the course and distance run to cross it with a later one.", "Order of reliability: fix → running fix → estimated position → DR position.", "Bearings by hand-bearing compass are magnetic: convert to true before plotting on the true rose."],
+    mnemo: "Time on top, bearing below." },
+  { id: "dr", mod: "Q172", title: "Dead reckoning", core: "From a known position, advance along your true course for the distance run (speed × time) through the water. Compare with real fixes to find the current.",
+    points: ["DR uses only ordered course and speed. It ignores current and leeway.", "Plot a DR at least every hour, at every course or speed change, and when you get a single LOP.", "Symbols: fix = circle, DR = semicircle, estimated position = square.", "Label the course line: C (true course, three digits) above, S (speed) below.", "The difference between your DR and an actual fix at the same time shows the set and drift you experienced.", "Six-minute rule: in 6 minutes you travel one tenth of your speed in nautical miles."],
+    mnemo: "Known point + course + distance = DR." },
+  { id: "current", mod: "Q172", title: "Set and drift", core: "Set is the direction the current flows toward; drift is its speed. Add your vector through the water and the current vector to get your track over the ground.", widget: "current",
+    points: ["Set is given in degrees true (direction toward). Drift is in knots. Wind is the opposite: named for where it comes from.", "Heading and speed through the water + set and drift = course and speed over ground (COG and SOG).", "Example: steering 000° at 6 kn with a 2 kn current setting 090° gives COG ≈ 018°T and SOG ≈ 6.32 kn.", "To make good a desired track, solve the current triangle for the course to steer. Pointing \"a bit\" into the current isn't enough.", "Speed made good (SMG) = distance between fixes ÷ time between them."],
+    mnemo: "Set = toward. Drift = speed." },
+  { id: "eta", mod: "Q172", title: "Time, distance and speed", core: "Distance (nm) = speed (knots) × time (hours). Convert minutes to hours before multiplying.", widget: "eta",
+    points: ["Time = distance ÷ speed. Speed = distance ÷ time.", "Minutes to decimal hours: divide by 60. 24 min = 0.4 h; 45 min = 0.75 h.", "\"60 D Street\": 60 × D = S × T when T is in minutes.", "ETA = departure time + running time. 22.5 nm at 7.5 kn = 3 h: depart 0935, arrive 1235.", "Six-minute rule: at 8 kn you cover 0.8 nm in 6 minutes."],
+    mnemo: "D = S × T." }
+];
+const LBYID = Object.fromEntries(LESSONS.map(l => [l.id, l]));
+LESSONS.forEach(l => { l.qs = QUESTIONS.filter(q => q.lesson === l.id).map(q => q.id); });
+
+/* ---------- WIDGETS ---------- */
+function slider(id, label, min, max, step, val, unit = "") { return `<div class="ctrl"><label for="${id}">${label}</label><input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}"><output id="${id}-o" for="${id}"></output></div>`; }
+const W = {};
+W.compass = el => {
+  el.innerHTML = `<div class="widget"><h3>Try it: compass to true</h3>${slider("cw-c", "Compass heading", 0, 359, 1, 87)}${slider("cw-d", "Deviation", -10, 10, 1, -2)}${slider("cw-v", "Variation", -25, 25, 1, 12)}<div class="chain" id="cw-chain"></div><p class="foot-note" id="cw-rev"></p></div>`;
+  const up = () => {
+    const c = +$("#cw-c").value, d = +$("#cw-d").value, v = +$("#cw-v").value, m = norm(c + d), t = norm(m + v);
+    $("#cw-c-o").textContent = deg(c); $("#cw-d-o").textContent = ew(d); $("#cw-v-o").textContent = ew(v);
+    $("#cw-chain").innerHTML = `<span class="box"><small>Compass</small>${deg(c)}</span><span class="op">${d >= 0 ? "+" : "−"} ${Math.abs(d)}° dev</span><span class="box"><small>Magnetic</small>${deg(m)}</span><span class="op">${v >= 0 ? "+" : "−"} ${Math.abs(v)}° var</span><span class="box hi"><small>True</small>${deg(t)}</span>`;
+    $("#cw-rev").textContent = `Reverse check: true ${deg(t)} ${v >= 0 ? "−" : "+"} ${Math.abs(v)}° = magnetic ${deg(m)}, ${d >= 0 ? "−" : "+"} ${Math.abs(d)}° = compass ${deg(c)}.`;
+  };
+  $$("input", el).forEach(i => i.addEventListener("input", up)); up();
+};
+W.current = el => {
+  el.innerHTML = `<div class="widget"><h3>Try it: current triangle</h3>${slider("cu-h", "Heading (°T)", 0, 355, 5, 0)}${slider("cu-s", "Boat speed", 1, 20, .5, 6)}${slider("cu-set", "Set (°T)", 0, 355, 5, 90)}${slider("cu-d", "Drift", 0, 5, .5, 2)}<div id="cu-svg" class="diagram"></div></div>`;
+  const up = () => { const h = +$("#cu-h").value, s = +$("#cu-s").value, st = +$("#cu-set").value, d = +$("#cu-d").value; $("#cu-h-o").textContent = deg(h); $("#cu-s-o").textContent = s + " kn"; $("#cu-set-o").textContent = deg(st); $("#cu-d-o").textContent = d + " kn"; $("#cu-svg").innerHTML = currentSVG(h, s, st, d); };
+  $$("input", el).forEach(i => i.addEventListener("input", up)); up();
+};
+W.anchoring = el => {
+  el.innerHTML = `<div class="widget"><h3>Try it: how much rode?</h3>${slider("an-d", "Water depth", 4, 60, 1, 10)}${slider("an-b", "Bow height", 2, 10, 1, 4)}${slider("an-r", "Scope ratio", 3, 10, 1, 7)}<div class="readout" id="an-out"></div></div>`;
+  const up = () => { const d = +$("#an-d").value, b = +$("#an-b").value, r = +$("#an-r").value; $("#an-d-o").textContent = d + " ft"; $("#an-b-o").textContent = b + " ft"; $("#an-r-o").textContent = r + ":1"; $("#an-out").innerHTML = `(${d} + ${b}) ft × ${r} = <b>${(d + b) * r} ft of rode</b><br><span class="muted">Using depth alone would give ${d * r} ft: ${b * r} ft short.</span>`; };
+  $$("input", el).forEach(i => i.addEventListener("input", up)); up();
+};
+W.tides = el => {
+  el.innerHTML = `<div class="widget"><h3>Try it: will you clear the shoal?</h3>${slider("ti-c", "Charted depth", 0, 18, 1, 9)}${slider("ti-t", "Height of tide", -2, 8, .5, 4)}${slider("ti-d", "Your draft", 1, 10, .5, 6)}<div id="ti-svg" class="diagram"></div></div>`;
+  const up = () => { const c = +$("#ti-c").value, t = +$("#ti-t").value, d = +$("#ti-d").value; $("#ti-c-o").textContent = c + " ft"; $("#ti-t-o").textContent = (t > 0 ? "+" : "") + t + " ft"; $("#ti-d-o").textContent = d + " ft"; $("#ti-svg").innerHTML = tidesSVG(c, t, d); };
+  $$("input", el).forEach(i => i.addEventListener("input", up)); up();
+};
+W.eta = el => {
+  el.innerHTML = `<div class="widget"><h3>Try it: ETA calculator</h3><div class="grid g3"><label class="stack" style="gap:4px"><span class="eyebrow">Distance (nm)</span><input type="number" id="et-d" value="22.5" step="0.1" min="0"></label><label class="stack" style="gap:4px"><span class="eyebrow">Speed (kn)</span><input type="number" id="et-s" value="7.5" step="0.1" min="0.1"></label><label class="stack" style="gap:4px"><span class="eyebrow">Departure</span><input type="time" id="et-t" value="09:35"></label></div><div class="readout" id="et-out"></div></div>`;
+  const up = () => { const d = +$("#et-d").value, s = +$("#et-s").value, tv = ($("#et-t").value || "00:00").split(":"); if (!(s > 0) || !(d >= 0)) { $("#et-out").textContent = "Enter a distance and a speed above zero."; return; } const h = d / s, mins = Math.round(h * 60), dep = +tv[0] * 60 + +tv[1]; $("#et-out").innerHTML = `T = ${d} ÷ ${s} = ${h.toFixed(2)} h = ${Math.floor(mins / 60)} h ${mins % 60} min<br>ETA = ${hhmm(dep)} + ${Math.floor(mins / 60)}:${String(mins % 60).padStart(2, "0")} = <b>${hhmm(dep + mins)}</b><br><span class="muted">6-minute run at ${s} kn: ${fmt1(s / 10)} nm</span>`; };
+  $$("input", el).forEach(i => i.addEventListener("input", up)); up();
+};
+W.lights = el => {
+  let vk = "power", vw = "ahead";
+  el.innerHTML = `<div class="widget"><h3>Explore: lights at night</h3><div class="row" id="lx-v"></div><div class="seg" id="lx-w"></div><div class="visual" id="lx-svg"></div><p id="lx-d"></p></div>`;
+  $("#lx-v").innerHTML = Object.entries(VESSELS).map(([k, v]) => `<button class="pick" data-k="${k}">${esc(v.name.replace(/, (making way|underway).*$/i, "").replace(/vessel /i, ""))}</button>`).join("");
+  $("#lx-w").innerHTML = ["ahead", "port", "stbd", "astern"].map(w => `<button data-w="${w}">${{ ahead: "Ahead", port: "Port side", stbd: "Starboard side", astern: "Astern" }[w]}</button>`).join("");
+  const up = () => { $$("#lx-v .pick").forEach(b => b.setAttribute("aria-pressed", b.dataset.k === vk)); $$("#lx-w button").forEach(b => b.setAttribute("aria-pressed", b.dataset.w === vw)); $("#lx-svg").innerHTML = lightsSVG(vk, vw); $("#lx-d").innerHTML = `<b>${esc(VESSELS[vk].name)}</b>, seen ${VIEWN[vw]}. ${esc(VESSELS[vk].desc)}`; };
+  $("#lx-v").addEventListener("click", e => { const b = e.target.closest("[data-k]"); if (b) { vk = b.dataset.k; up(); } });
+  $("#lx-w").addEventListener("click", e => { const b = e.target.closest("[data-w]"); if (b) { vw = b.dataset.w; up(); } });
+  up();
+};
+W.signals = el => {
+  el.innerHTML = `<div class="widget"><h3>Listen: tap to play</h3><p class="foot-note">Real timing: short ≈ 1 s, prolonged ≈ 4 s. Turn your sound on.</p><div class="sig-list">${SIGNALS.map((g, i) => `<button class="sig" data-i="${i}">${patHTML(g.p)}<span><b>${esc(g.m)}</b><br><span class="muted" style="font-size:.88rem">${esc(g.rule)}</span></span></button>`).join("")}</div></div>`;
+  el.addEventListener("click", e => { const b = e.target.closest(".sig"); if (!b) return; playPattern(SIGNALS[+b.dataset.i].p, $(".pattern", b)); });
+};
+W.buoys = el => {
+  el.innerHTML = `<div class="widget"><h3>Explore: marks you'll meet</h3><div class="grid g3">${Object.entries(BUOYS).map(([k, b]) => `<div class="card" style="padding:10px;display:flex;flex-direction:column;gap:8px"><div class="visual">${buoySVG(k)}</div><b>${esc(b.name)}</b><span class="muted" style="font-size:.9rem">${esc(b.mean)}</span></div>`).join("")}</div></div>`;
+};
+
+/* ---------- DRILL GENERATORS ---------- */
+function distinctOpts(correct, cands, fmt) {
+  const seen = new Set([fmt(correct)]), out = [fmt(correct)];
+  for (const c of cands) { const f = fmt(c); if (!seen.has(f)) { seen.add(f); out.push(f); } if (out.length === 4) break; }
+  let k = 1; while (out.length < 4) { const f = fmt(typeof correct === "number" ? correct + k * 3 : correct + k); if (!seen.has(f)) { seen.add(f); out.push(f); } k++; }
+  return out;
+}
+const CALC = [
+  () => { const c = rnd(0, 359), d = rnd(1, 6) * pickOne([1, -1]), v = rnd(2, 18) * pickOne([1, -1]), m = norm(c + d), t = norm(m + v);
+    return { q: `Compass heading ${deg(c)}, deviation ${ew(d)}, variation ${ew(v)}. What is the true heading?`, o: distinctOpts(t, [c - d + v, c + d - v, c - d - v].map(norm), x => deg(x) + "T"), a: 0, x: `Compass → true: add East, subtract West. ${deg(c)} ${d >= 0 ? "+" : "−"} ${Math.abs(d)} = ${deg(m)} M; ${v >= 0 ? "+" : "−"} ${Math.abs(v)} = ${deg(t)} T.`, lesson: "compass" }; },
+  () => { const t = rnd(0, 359), v = rnd(2, 18) * pickOne([1, -1]), d = rnd(1, 6) * pickOne([1, -1]), m = norm(t - v), c = norm(m - d);
+    return { q: `True course ${deg(t)}, variation ${ew(v)}, deviation ${ew(d)}. What compass course do you steer?`, o: distinctOpts(c, [t + v + d, t - v + d, t + v - d].map(norm), x => deg(x) + "C"), a: 0, x: `True → compass: add West, subtract East. ${deg(t)} ${v >= 0 ? "−" : "+"} ${Math.abs(v)} = ${deg(m)} M; ${d >= 0 ? "−" : "+"} ${Math.abs(d)} = ${deg(c)} C.`, lesson: "compass" }; },
+  () => { const s = pickOne([5, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20]), mins = pickOne([12, 18, 24, 30, 36, 42, 48, 54, 66, 72, 90]), d = s * mins / 60;
+    return { q: `At ${s} knots, how far do you travel in ${mins} minutes?`, o: distinctOpts(d, [s * mins / 100, d * 2, s * mins / 6, d + s / 10], x => fmt1(x) + " nm"), a: 0, x: `D = S × T = ${s} × (${mins} ÷ 60) = ${s} × ${fmt1(mins / 60)} h = ${fmt1(d)} nm.`, lesson: "eta" }; },
+  () => { const s = pickOne([4, 5, 6, 7.5, 8, 10, 12, 15]), mins = pickOne([60, 90, 120, 150, 180, 210, 240]), d = s * mins / 60, dep = rnd(12, 30) * 30 + pickOne([0, 5, 10, 15, 20]);
+    const h = Math.floor(mins / 60), r = mins % 60, wrong = dep + h * 60 + (r ? 50 : 30);
+    return { q: `You depart at ${hhmm(dep)} and run ${fmt1(d)} nm at ${s} knots. What is your ETA?`, o: distinctOpts(dep + mins, [wrong, dep + mins + 60, dep + mins - 30, dep + mins + 30], hhmm), a: 0, x: `T = ${fmt1(d)} ÷ ${s} = ${fmt1(mins / 60)} h (${h} h ${r} min). ${hhmm(dep)} + ${h}:${String(r).padStart(2, "0")} = ${hhmm(dep + mins)}. A common error is reading ${fmt1(mins / 60)} h as ${h} h ${r ? 50 : 30} min.`, lesson: "eta" }; },
+  () => { const hrs = pickOne([1.5, 2, 2.5, 3, 4]), s = pickOne([5, 6, 7, 8, 9, 11, 12]), d = s * hrs, start = rnd(14, 30) * 30;
+    return { q: `You cover ${fmt1(d)} nm between ${hhmm(start)} and ${hhmm(start + hrs * 60)}. What is your speed made good?`, o: distinctOpts(s, [d, d / 2, s + 2, s * 1.5], x => fmt1(x) + " kn"), a: 0, x: `S = D ÷ T = ${fmt1(d)} ÷ ${fmt1(hrs)} h = ${s} kn.`, lesson: "current" }; },
+  () => { const dep = rnd(8, 30), b = rnd(3, 6), r = pickOne([5, 7]), rode = (dep + b) * r;
+    return { q: `Water depth is ${dep} ft and your bow roller is ${b} ft above the water. How much rode do you need for ${r}:1 scope?`, o: distinctOpts(rode, [dep * r, (dep + b) * (r - 1), (dep - b) * r, rode + 20], x => x + " ft"), a: 0, x: `Scope uses depth + bow height: (${dep} + ${b}) × ${r} = ${rode} ft. Using depth alone (${dep * r} ft) leaves you short.`, lesson: "anchoring" }; },
+  () => { const c = rnd(5, 14), t = pickOne([-1, 0, 1, 2, 3, 4, 5]), dr = rnd(3, 7); const clr = c + t - dr; if (clr <= 0) return CALC[6]();
+    return { q: `Charted depth ${c} ft, height of tide ${t >= 0 ? "+" : ""}${t} ft, draft ${dr} ft. What is your static under-keel clearance?`, o: distinctOpts(clr, [c - t - dr, c + t, c - dr, c + t + dr], x => x + " ft"), a: 0, x: `(${c} ${t >= 0 ? "+" : "−"} ${Math.abs(t)}) − ${dr} = ${clr} ft, before allowing for squat, waves and heel.`, lesson: "tides" }; },
+  () => { const deg0 = rnd(25, 44), m1 = rnd(0, 30) + pickOne([0, .5]), diff = rnd(6, 28) + pickOne([0, .5]), m2 = m1 + diff, nm = diff;
+    const f = m => `${deg0}°${(m < 10 ? "0" : "") + m.toFixed(1)}'N`;
+    return { q: `How far is it along the meridian from ${f(m1)} to ${f(m2)}?`, o: distinctOpts(nm, [nm / 10, nm * 10, nm + 60, nm * 1.15], x => fmt1(x) + " nm"), a: 0, x: `${m2.toFixed(1)}' − ${m1.toFixed(1)}' = ${fmt1(diff)}' of latitude = ${fmt1(nm)} nm.`, lesson: "charts" }; },
+  () => { const b = rnd(0, 359), r = norm(b + 180);
+    return { q: `A landmark bears ${deg(b)}T from your boat. What bearing do you plot from the landmark?`, o: distinctOpts(r, [norm(b + 90), norm(b - 90), norm(360 - b)], x => deg(x) + "T"), a: 0, x: `Plot the reciprocal: ${deg(b)} ${b >= 180 ? "− 180" : "+ 180"} = ${deg(r)}.`, lesson: "lop" }; },
+  () => { const h = pickOne([0, 90, 180, 270]), s = rnd(5, 12), side = pickOne([90, -90]), set = norm(h + side), d = rnd(1, 4);
+    const ang = Math.atan2(d, s) * 180 / Math.PI, cog = norm(h + Math.sign(side) * ang), sog = Math.hypot(s, d), wrongC = norm(h - Math.sign(side) * ang);
+    const fmt = ([c, v]) => `COG ${deg(c)}T, SOG ${v.toFixed(1)} kn`;
+    const opts = [[cog, sog], [wrongC, sog], [cog, s + d], [wrongC, s - d]].map(fmt);
+    return { q: `You steer ${deg(h)}T at ${s} kn. The current sets ${deg(set)}T at ${d} kn. What are your course and speed over ground?`, o: opts, a: 0, x: `Add the vectors. Offset angle = atan(${d}/${s}) ≈ ${ang.toFixed(1)}° toward the set → COG ≈ ${deg(cog)}T. SOG = √(${s}² + ${d}²) ≈ ${sog.toFixed(2)} kn.`, lesson: "current" }; }
+];
+function makeLightsItem() {
+  const keys = Object.keys(VESSELS), k = pickOne(keys), v = VESSELS[k], view = pickOne(v.views);
+  const others = shuffle(keys.filter(x => x !== k)).slice(0, 3);
+  return { q: `At night you see these lights on a vessel seen ${VIEWN[view]}. What is she?`, o: [v.name, ...others.map(o => VESSELS[o].name)], a: 0, x: v.desc, visual: lightsSVG(k, view), lesson: "lights" };
+}
+function makeShapeItem() {
+  const keys = Object.keys(SHAPES), k = pickOne(keys), others = shuffle(keys.filter(x => x !== k)).slice(0, 3);
+  return { q: "By day you see this vessel showing these shapes. What do they mean?", o: [SHAPES[k].name, ...others.map(o => SHAPES[o].name)], a: 0, x: SHAPES[k].desc, visual: shapesSVG(k), lesson: "lights" };
+}
+function makeBuoyItem() {
+  const keys = Object.keys(BUOYS), k = pickOne(keys), others = shuffle(keys.filter(x => x !== k)).slice(0, 3);
+  return { q: "Returning from sea in U.S. waters, you see this mark. What does it tell you?", o: [BUOYS[k].mean, ...others.map(o => BUOYS[o].mean)], a: 0, x: `${BUOYS[k].name}${BUOYS[k].light ? ` (light: ${BUOYS[k].light})` : ""}. ${BUOYS[k].mean}.`, visual: buoySVG(k), lesson: "buoys" };
+}
+function makeSoundItem() {
+  const i = rnd(0, SIGNALS.length - 1), g = SIGNALS[i], others = shuffle(SIGNALS.filter((_, j) => j !== i)).slice(0, 3);
+  return { q: "Listen. Under the International Rules, what does this signal mean?", o: [g.m, ...others.map(o => o.m)], a: 0, x: g.rule, sound: g.p, lesson: "signals" };
+}
+const DRILLS = {
+  lights: { title: "Night lights", sub: "Identify vessels from their lights, seen from different angles.", make: makeLightsItem, art: () => lightsSVG("ram", "ahead") },
+  shapes: { title: "Day shapes", sub: "Balls, cones, diamonds and cylinders.", make: makeShapeItem, art: () => shapesSVG("ram") },
+  sounds: { title: "Sound signals", sub: "Hear the horn and name the signal. Sound on.", make: makeSoundItem, art: () => `<svg viewBox="0 0 320 180"><rect width="320" height="180" class="s-water" opacity=".6"/>${[["-", 30], [".", 0], [".", 0]].map(() => "").join("")}<rect x="40" y="82" width="120" height="18" rx="9" class="s-ink"/><rect x="176" y="82" width="30" height="18" rx="9" class="s-acc"/><rect x="222" y="82" width="30" height="18" rx="9" class="s-ink"/><path d="M270,70 q14,21 0,42 M282,60 q24,31 0,62" class="l-acc" stroke-width="3"/></svg>` },
+  buoys: { title: "Buoys and marks", sub: "Lateral, preferred-channel, safe-water, danger and more.", make: makeBuoyItem, art: () => `<svg viewBox="0 0 320 180"><rect width="320" height="180" fill="url(#daysky)"/><rect y="140" width="320" height="40" fill="#6f9db6"/>${buoyG("green", 10, -10, .9)}${buoyG("red", 160, -10, .9)}</svg>` },
+  calc: { title: "Plotting math", sub: "Fresh numbers every time: compass, ETA, current, scope, tide.", make: () => pickOne(CALC)(), art: () => D.eta().replace('role="img"', 'role="img" preserveAspectRatio="xMidYMid meet"') }
+};
+
+/* ---------- SESSIONS ---------- */
+let SESSION = null;
+function prep(it) { return Object.assign({}, it, { order: shuffle([0, 1, 2, 3]) }); }
+function startSession(o) {
+  stopSound();
+  SESSION = Object.assign({ i: 0, picks: Array(o.items.length).fill(null), shown: Array(o.items.length).fill(false), flags: Array(o.items.length).fill(false), start: Date.now(), confirm: false }, o, { items: o.items.map(prep) });
+  if (location.hash === "#quiz") render(); else location.hash = "quiz";
+}
+function startTopic(lessonId) { const l = LBYID[lessonId]; startSession({ title: l.title, mode: "practice", kind: "bank", items: shuffle(l.qs).map(id => QBYID[id]) }); }
+function startDrill(k, n = 10) { if (k === "sounds") ac(); const d = DRILLS[k]; const items = []; const seen = new Set(); let guard = 0; while (items.length < n && guard++ < 200) { const it = d.make(); const key = it.q + it.o[0] + (it.sound || ""); if (seen.has(key) && guard < 150) continue; seen.add(key); items.push(it); } startSession({ title: d.title, mode: "practice", kind: "drill", drill: k, items }); }
+
+/* ---------- RENDER ---------- */
+const app = $("#app");
+function navHTML(cur) { return NAV.map(([k, l]) => `<a href="#${k}" class="${cur === k ? "on" : ""}" ${cur === k ? 'aria-current="page"' : ""}>${IC[k]}<span>${l}</span></a>`).join(""); }
+function route() { const h = (location.hash || "#home").slice(1); return h || "home"; }
+function render() {
+  stopSound();
+  const r = route();
+  const top = r.startsWith("lesson-") ? "learn" : r === "quiz" || r === "results" ? (SESSION && SESSION.mode === "exam" ? "exam" : SESSION && SESSION.kind === "drill" ? "drills" : "practice") : r;
+  $("#nav").innerHTML = navHTML(top); $("#tabbar").innerHTML = navHTML(top);
+  if (r === "home") viewHome();
+  else if (r === "learn") viewLearn();
+  else if (r.startsWith("lesson-") && LBYID[r.slice(7)]) viewLesson(LBYID[r.slice(7)]);
+  else if (r === "practice") viewPractice();
+  else if (r === "exam") viewExam();
+  else if (r === "drills") viewDrills();
+  else if (r === "quiz" && SESSION) viewQuiz();
+  else if (r === "results" && SESSION && SESSION.result) viewResults();
+  else viewHome();
+}
+function go(h) { if (location.hash === "#" + h) render(); else location.hash = h; window.scrollTo(0, 0); }
+window.addEventListener("hashchange", () => { render(); window.scrollTo(0, 0); });
+
+function modCard(m) {
+  const st = modStats(m), M = MOD[m], pct = Math.round(100 * st.mastered / st.total), passPct = 100 * M.pass / M.total;
+  const best = (S.exams[m] || []).reduce((a, e) => Math.max(a, e.score), -1);
+  return `<div class="card modcard m${m}"><div class="row" style="justify-content:space-between"><span class="code">${m}</span><span class="chip">Pass ${M.pass}/${M.total}</span></div><h3>${M.name}</h3>
+  <div class="meter" title="Mastered ${st.mastered} of ${st.total}"><i style="width:${pct}%"></i><span class="mark" style="left:${passPct}%"></span></div>
+  <div class="kv"><span>Answered right last time</span><b>${st.mastered}/${st.total}</b></div>
+  <div class="kv"><span>Accuracy</span><b>${st.acc === null ? "–" : st.acc + "%"}</b></div>
+  <div class="kv"><span>Best mock exam</span><b>${best < 0 ? "–" : best + "/" + M.total}</b></div>
+  <div class="row" style="margin-top:4px"><button class="btn" data-act="practice-mod" data-m="${m}">Practice</button><button class="btn ghost" data-act="exam-mod" data-m="${m}">Mock exam</button></div></div>`;
+}
+function heroArt() {
+  return `<svg class="hero-art" viewBox="0 0 300 220" aria-hidden="true"><rect width="300" height="220" rx="12" class="s-water"/><path d="M0,0 L300,0 L300,46 Q210,70 150,40 Q90,12 0,58Z" class="s-land"/>
+  ${[[60, 120], [90, 150], [70, 180]].map(([y, x], i) => "").join("")}
+  <path d="M40,200 C90,160 120,140 150,110 S220,70 262,60" class="l-acc" stroke-width="2.5" stroke-dasharray="7 5"/>
+  ${buoyG("green", 92, 42, .42)}${buoyG("red", 170, 6, .42)}${buoyG("green", 146, 92, .42)}${buoyG("red", 222, 54, .42)}
+  ${boat(70, 178, 50, "s-ink", 1.15)}
+  <g transform="translate(250 168)"><circle r="30" class="s-surface" style="stroke:var(--ink)" stroke-width="1.5"/><path d="M0,-26 L5,0 L0,26 L-5,0Z" class="s-ink"/><path d="M0,-26 L5,0 L-5,0Z" class="s-acc"/><text y="-32" text-anchor="middle" class="t-lab" font-size="10">N</text></g></svg>`;
+}
+function viewHome() {
+  const miss = missedIds().length, tot = QUESTIONS.length, seen = QUESTIONS.filter(q => S.q[q.id]).length;
+  app.innerHTML = `<section class="hero"><div><span class="eyebrow">USCG OUPV · Near Coastal · 2026 study edition</span><h1>Study for your six-pack captain's license, a few questions at a time.</h1><p class="lead">${tot} practice questions across all four exam modules, ${LESSONS.length} illustrated lessons, and visual drills for lights, shapes, buoys and horn signals.</p>
+  <div class="row actions"><button class="btn primary" data-act="quick">${IC.play} Quick 10, mixed</button>${miss ? `<button class="btn" data-act="missed">Review ${miss} missed</button>` : ""}<a class="btn ghost" href="#learn">Start with lessons</a></div>
+  <p class="foot-note" style="margin-top:14px">${seen} of ${tot} questions tried so far.</p></div>${heroArt()}</section>
+  <section class="stack"><div class="row" style="justify-content:space-between"><h2>Your four exam modules</h2><span class="muted" style="font-size:.9rem">Bar marker = official pass mark</span></div><div class="grid g4">${Object.keys(MOD).map(modCard).join("")}</div></section>
+  <section class="stack"><h2>Visual drills</h2><div class="grid g3">${drillCards(["lights", "sounds", "buoys"])}</div></section>
+  <p class="foot-note">Independent study aid built from the 2026 app-ready study book. The practice questions are original study items, not official Coast Guard exam questions, and studying here doesn't count as a USCG-approved course. Real Q172 plotting needs the official training chart, dividers and a plotter. Progress is saved in this browser only.</p>`;
+}
+function drillCards(keys) { return keys.map(k => `<button class="card drill" data-act="drill" data-k="${k}"><div class="art">${DRILLS[k].art()}</div><div class="txt"><h3>${DRILLS[k].title}</h3><p class="muted">${DRILLS[k].sub}</p></div></button>`).join(""); }
+function viewLearn() {
+  app.innerHTML = `<div class="stack"><span class="eyebrow">Learn</span><h1>Illustrated lessons</h1><p class="muted" style="max-width:62ch">Each lesson has a diagram, the core idea, key facts and a quick check. Lessons marked <span class="added">Added</span> fill gaps in the book with material from the same exam outline.</p></div>
+  ${Object.keys(MOD).map(m => `<section class="stack"><div class="row"><span class="chip mod m${m}">${m}</span><h2>${MOD[m].name}</h2></div><div class="grid g3">${LESSONS.filter(l => l.mod === m).map(l => { const done = l.qs.filter(id => S.q[id] && S.q[id].last === 1).length; return `<a class="card lesson-card m${m}" href="#lesson-${l.id}"><h3>${esc(l.title)}</h3><p>${esc(l.core)}</p><div class="foot"><span>${l.qs.length ? `${done}/${l.qs.length} questions right` : "Drill-based"}</span>${l.added ? '<span class="added">Added</span>' : ""}</div></a>`; }).join("")}</div></section>`).join("")}`;
+}
+function viewLesson(l) {
+  const idx = LESSONS.indexOf(l), prev = LESSONS[idx - 1], next = LESSONS[idx + 1];
+  const qc = l.qs.length ? QBYID[pickOne(l.qs)] : null;
+  app.innerHTML = `<div><a class="btn ghost" href="#learn">${IC.back} All lessons</a></div>
+  <div class="lesson-head"><div class="row"><span class="chip mod m${l.mod}">${l.mod}</span><span class="eyebrow">${MOD[l.mod].name}</span>${l.added ? '<span class="added">Added</span>' : ""}</div><h1>${esc(l.title)}</h1></div>
+  <div class="lesson-body"><div class="stack"><div class="diagram">${D[l.id]()}</div>${l.widget ? `<div class="card" id="widget"></div>` : ""}</div>
+  <div class="stack"><div class="core"><span class="eyebrow">Core idea</span><p style="margin-top:6px;font-size:1.05rem">${esc(l.core)}</p></div>
+  <div class="card stack"><span class="eyebrow">Key facts</span><ul class="points">${l.points.map(p => `<li>${esc(p)}</li>`).join("")}</ul>${l.mnemo ? `<p class="mnemo" style="margin-top:6px">${esc(l.mnemo)}</p>` : ""}</div>
+  ${qc ? `<div class="card stack" id="qc"></div>` : ""}
+  <div class="row">${l.qs.length ? `<button class="btn primary" data-act="topic" data-l="${l.id}">Practice this topic · ${l.qs.length}</button>` : ""}${lessonDrill(l.id)}</div></div></div>
+  <div class="row" style="justify-content:space-between">${prev ? `<a class="btn ghost" href="#lesson-${prev.id}">${IC.back} ${esc(prev.title)}</a>` : "<span></span>"}${next ? `<a class="btn ghost" href="#lesson-${next.id}">${esc(next.title)} ${IC.arrow}</a>` : ""}</div>`;
+  if (l.widget) W[l.widget]($("#widget"));
+  if (qc) quickCheck($("#qc"), qc);
+}
+function lessonDrill(id) { const m = { lights: ["lights", "Night lights drill"], signals: ["sounds", "Sound drill"], buoys: ["buoys", "Buoy drill"], compass: ["calc", "Plotting math drill"], eta: ["calc", "Plotting math drill"], current: ["calc", "Plotting math drill"], tides: ["calc", "Plotting math drill"] }[id]; return m ? `<button class="btn" data-act="drill" data-k="${m[0]}">${m[1]}</button>` : (id === "lights" ? "" : ""); }
+function quickCheck(el, q) {
+  const order = shuffle([0, 1, 2, 3]);
+  el.innerHTML = `<span class="eyebrow">Quick check · ${q.id}</span><p class="stem" style="font-size:1.08rem">${esc(q.q)}</p><div class="opts">${order.map((oi, k) => `<button class="opt" data-oi="${oi}"><span class="k">${"ABCD"[k]}</span><span>${esc(q.o[oi])}</span></button>`).join("")}</div><div id="qc-fb"></div>`;
+  el.addEventListener("click", e => {
+    const b = e.target.closest(".opt"); if (!b || b.disabled) return; const oi = +b.dataset.oi, ok = oi === q.a; record(q.id, ok); save();
+    $$(".opt", el).forEach(x => { x.disabled = true; if (+x.dataset.oi === q.a) x.classList.add("right"); else if (x === b) x.classList.add("wrong"); });
+    $("#qc-fb", el).innerHTML = `<div class="feedback ${ok ? "ok" : "no"}"><b>${ok ? "Correct" : "Not quite"}</b><span>${esc(q.x)}</span></div>`;
+  });
+}
+let PSET = { mods: new Set(["Q100", "Q170", "Q171", "Q172"]), lessons: new Set(), count: 20, only: "all" };
+function practicePool() {
+  return QUESTIONS.filter(q => PSET.mods.has(q.mod) && (!PSET.lessons.size || PSET.lessons.has(q.lesson)) && (PSET.only === "all" || (PSET.only === "missed" ? S.q[q.id] && S.q[q.id].last === -1 : !S.q[q.id] || S.q[q.id].last !== 1)));
+}
+function viewPractice() {
+  const pool = practicePool(), avail = LESSONS.filter(l => l.qs.some(id => PSET.mods.has(QBYID[id].mod)));
+  app.innerHTML = `<div class="stack"><span class="eyebrow">Practice</span><h1>Build a practice set</h1><p class="muted" style="max-width:62ch">Answers and explanations show right after each question. Options are shuffled every time.</p></div>
+  <div class="card stack"><span class="eyebrow">Modules</span><div class="row">${Object.keys(MOD).map(m => `<button class="pick" data-act="pm" data-m="${m}" aria-pressed="${PSET.mods.has(m)}">${m} · ${MOD[m].name}</button>`).join("")}</div>
+  <span class="eyebrow" style="margin-top:8px">Topics <span class="muted" style="text-transform:none;letter-spacing:0">(none selected = all)</span></span><div class="row">${avail.map(l => `<button class="pick" data-act="pl" data-l="${l.id}" aria-pressed="${PSET.lessons.has(l.id)}">${esc(l.title)}</button>`).join("")}</div>
+  <span class="eyebrow" style="margin-top:8px">Which questions</span><div class="seg">${[["all", "All"], ["new", "Not yet mastered"], ["missed", "Missed last time"]].map(([k, t]) => `<button data-act="po" data-k="${k}" aria-pressed="${PSET.only === k}">${t}</button>`).join("")}</div>
+  <span class="eyebrow" style="margin-top:8px">How many</span><div class="seg">${[10, 20, 50, 0].map(n => `<button data-act="pc" data-n="${n}" aria-pressed="${PSET.count === n}">${n || "All"}</button>`).join("")}</div>
+  <div class="row" style="margin-top:10px"><button class="btn primary" data-act="pstart" ${pool.length ? "" : "disabled"}>${IC.play} Start · ${PSET.count ? Math.min(PSET.count, pool.length) : pool.length} questions</button><span class="muted">${pool.length} match your filters</span></div></div>
+  <section class="stack"><h2>Or drill with visuals</h2><div class="grid g3">${drillCards(Object.keys(DRILLS))}</div></section>`;
+}
+function viewExam() {
+  const resume = SESSION && SESSION.mode === "exam" && !SESSION.result;
+  app.innerHTML = `<div class="stack"><span class="eyebrow">Mock exam</span><h1>Sit a full module</h1><p class="muted" style="max-width:66ch">Same length and pass mark as the real module: 50/50/50/10 questions. No feedback until you submit. This is a practice simulation built from one original question set per module, not a real Coast Guard exam.</p></div>
+  ${resume ? `<div class="confirm row" style="justify-content:space-between"><span>You have a ${SESSION.module} mock exam in progress: ${SESSION.picks.filter(p => p !== null).length}/${SESSION.items.length} answered.</span><button class="btn primary" data-act="resume">Resume</button></div>` : ""}
+  <div class="grid g4">${Object.keys(MOD).map(m => { const M = MOD[m], hist = (S.exams[m] || []).slice(-3).reverse(); return `<div class="card modcard m${m}"><span class="code">${m}</span><h3>${M.name}</h3><div class="kv"><span>Questions</span><b>${M.total}</b></div><div class="kv"><span>Pass mark</span><b>${M.pass} (${Math.round(100 * M.pass / M.total)}%)</b></div><div class="kv"><span>Recent</span><b>${hist.length ? hist.map(h => h.score).join(" · ") : "–"}</b></div><button class="btn primary" data-act="exam-mod" data-m="${m}">Start ${m}</button></div>`; }).join("")}</div>
+  <p class="foot-note">Exam tips from the book: sit modules separately, don't use notes for Q100, and aim higher than the pass mark: 48 for Q100, 43 for Q170 and Q171, 10 for Q172.</p>`;
+}
+function viewDrills() {
+  const st = k => { const r = S.drills[k]; return r ? `${r.c}/${r.c + r.w} right so far` : "Not tried yet"; };
+  app.innerHTML = `<div class="stack"><span class="eyebrow">Visual drills</span><h1>Practice with pictures and sound</h1><p class="muted" style="max-width:62ch">These drills are added on top of the book. Each run generates 10 fresh questions, so you can repeat them as often as you like.</p></div>
+  <div class="grid g3">${Object.keys(DRILLS).map(k => `<button class="card drill" data-act="drill" data-k="${k}"><div class="art">${DRILLS[k].art()}</div><div class="txt"><h3>${DRILLS[k].title}</h3><p class="muted">${DRILLS[k].sub}</p><span class="eyebrow">${st(k)}</span></div></button>`).join("")}</div>`;
+}
+function viewQuiz() {
+  const s = SESSION, it = s.items[s.i], exam = s.mode === "exam", pick = s.picks[s.i], shown = s.shown[s.i];
+  const answered = s.picks.filter(p => p !== null).length;
+  const meta = it.id ? `<span class="chip mod m${it.mod}">${it.mod}</span><span class="chip">${it.id}</span>` : `<span class="chip">Drill</span>`;
+  const optsHTML = it.order.map((oi, k) => {
+    let cls = "opt"; if (pick === oi) cls += " sel";
+    if (shown) { if (oi === it.a) cls = "opt right"; else if (pick === oi) cls = "opt wrong"; }
+    return `<button class="${cls}" data-act="ans" data-oi="${oi}" ${shown ? "disabled" : ""}><span class="k">${"ABCD"[k]}</span><span>${esc(it.o[oi])}</span></button>`;
+  }).join("");
+  const visual = it.visual ? `<div class="visual" style="background:${it.visual.includes("nightsky") ? "#05111b" : "#cfe3ee"}">${it.visual}</div>` : it.sound ? `<div class="visual"><div class="bigpattern" id="bigpat">${[...it.sound].map(c => `<i class="${c === "-" ? "p" : c === "r" ? "r" : "s"}"></i>`).join("")}</div><div class="row" style="justify-content:center;padding:0 0 18px"><button class="btn" data-act="play">${IC.play} Play signal</button></div></div>` : "";
+  const ok = shown && pick === it.a;
+  const fb = shown ? `<div class="feedback ${ok ? "ok" : "no"}"><b>${ok ? "Correct" : "Correct answer: " + esc(it.o[it.a])}</b><span>${esc(it.x)}</span>${it.lesson && LBYID[it.lesson] ? `<a href="#lesson-${it.lesson}" style="font-weight:600">Review lesson: ${esc(LBYID[it.lesson].title)}</a>` : ""}</div>` : "";
+  const last = s.i === s.items.length - 1;
+  let nav;
+  if (exam) nav = `<div class="qnav"><button class="btn" data-act="prev" ${s.i ? "" : "disabled"}>${IC.back} Previous</button><button class="btn ghost" data-act="flag">${IC.flag} ${s.flags[s.i] ? "Unflag" : "Flag"}</button>${last ? `<button class="btn primary" data-act="submit">Submit exam</button>` : `<button class="btn primary" data-act="next">Next ${IC.arrow}</button>`}</div>`;
+  else nav = `<div class="qnav"><button class="btn ghost" data-act="quit">End session</button>${shown ? `<button class="btn primary" data-act="next" id="nextbtn">${last ? "See results" : "Next question"} ${IC.arrow}</button>` : `<span class="muted" style="align-self:center;font-size:.9rem">Pick an answer · keys <span class="kbd">1</span>–<span class="kbd">4</span></span>`}</div>`;
+  const confirm = exam && s.confirm ? `<div class="confirm stack"><b>Submit now?</b><span>${answered} of ${s.items.length} answered${s.items.length - answered ? `; ${s.items.length - answered} unanswered will count as wrong` : ""}.</span><div class="row"><button class="btn primary" data-act="submit-yes">Submit and score</button><button class="btn" data-act="submit-no">Keep working</button></div></div>` : "";
+  const grid = exam ? `<details class="card" ${s.items.length <= 10 ? "open" : ""}><summary style="cursor:pointer;font-weight:600">Question map · ${answered}/${s.items.length} answered</summary><div class="navgrid" style="margin-top:12px">${s.items.map((_, k) => `<button data-act="goto" data-k="${k}" class="${s.picks[k] !== null ? "done" : ""} ${k === s.i ? "cur" : ""} ${s.flags[k] ? "flag" : ""}">${k + 1}</button>`).join("")}</div></details>` : "";
+  app.innerHTML = `<div class="quiz"><div class="qtop"><h3>${esc(s.title)}</h3>${exam ? '<span class="chip">Exam mode</span>' : ""}<span class="count">${s.i + 1} / ${s.items.length}</span></div><div class="progress"><i style="width:${100 * (exam ? answered : s.i + (shown ? 1 : 0)) / s.items.length}%"></i></div>
+  <div class="card qcard"><div class="row">${meta}</div>${visual}<p class="stem">${esc(it.q)}</p><div class="opts">${optsHTML}</div>${fb}</div>${confirm}${nav}${grid}</div>`;
+  if (it.sound && AC && !shown) setTimeout(() => { if (SESSION === s && s.items[s.i] === it) playPattern(it.sound, $("#bigpat")); }, 250);
+  if (shown && $("#nextbtn")) $("#nextbtn").focus({ preventScroll: true });
+}
+function answer(oi) {
+  const s = SESSION, it = s.items[s.i];
+  if (s.mode === "exam") { s.picks[s.i] = oi; s.confirm = false; viewQuiz(); return; }
+  if (s.shown[s.i]) return;
+  s.picks[s.i] = oi; s.shown[s.i] = true; const ok = oi === it.a;
+  if (it.id) record(it.id, ok); else if (s.drill) { const r = S.drills[s.drill] || (S.drills[s.drill] = { c: 0, w: 0 }); ok ? r.c++ : r.w++; }
+  save(); viewQuiz();
+}
+function finish() {
+  const s = SESSION; stopSound();
+  if (s.mode === "exam") s.items.forEach((it, k) => record(it.id, s.picks[k] === it.a));
+  const correct = s.items.filter((it, k) => s.picks[k] === it.a).length;
+  s.result = { correct, total: s.items.length, secs: Math.round((Date.now() - s.start) / 1000) };
+  if (s.mode === "exam") { (S.exams[s.module] || (S.exams[s.module] = [])).push({ score: correct, date: Date.now() }); s.shown = s.shown.map(() => true); }
+  save(); go("results");
+}
+function ring(p, ok) {
+  const r = 54, c = 2 * Math.PI * r;
+  return `<svg class="ring" viewBox="0 0 132 132" aria-hidden="true"><circle cx="66" cy="66" r="${r}" fill="none" style="stroke:var(--surface-2)" stroke-width="12"/><circle cx="66" cy="66" r="${r}" fill="none" style="stroke:${ok ? "var(--good)" : "var(--accent)"}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${c * p} ${c}" transform="rotate(-90 66 66)"/><text x="66" y="74" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-size="30" font-weight="700">${Math.round(p * 100)}%</text></svg>`;
+}
+function viewResults() {
+  const s = SESSION, R = s.result, exam = s.mode === "exam", M = exam ? MOD[s.module] : null, pass = exam ? R.correct >= M.pass : R.correct / R.total >= .7;
+  const by = {}; s.items.forEach((it, k) => { const key = it.lesson || "other"; const b = by[key] || (by[key] = { c: 0, t: 0 }); b.t++; if (s.picks[k] === it.a) b.c++; });
+  const missed = s.items.map((it, k) => ({ it, k })).filter(({ it, k }) => s.picks[k] !== it.a);
+  const mins = Math.floor(R.secs / 60), secs = R.secs % 60;
+  app.innerHTML = `<div class="quiz"><span class="eyebrow">${exam ? s.module + " mock exam" : "Session"} results</span>
+  <div class="card score">${ring(R.correct / R.total, pass)}<div class="stack" style="gap:6px"><span class="verdict ${pass ? "pass" : "fail"}">${exam ? (pass ? "Passed" : "Not yet") : pass ? "Nice work" : "Keep at it"}</span><span class="mono" style="font-size:1.1rem">${R.correct} / ${R.total} correct${exam ? ` · pass mark ${M.pass}` : ""}</span><span class="muted">Time ${mins} min ${secs} s</span></div></div>
+  ${Object.keys(by).length > 1 ? `<div class="card stack"><span class="eyebrow">By topic</span><div class="bars">${Object.entries(by).sort((a, b) => a[1].c / a[1].t - b[1].c / b[1].t).map(([k, b]) => `<div class="bar-row"><a href="#lesson-${k}" style="color:inherit;text-decoration:none">${esc(LBYID[k] ? LBYID[k].title : "Other")}</a><div class="meter"><i style="width:${100 * b.c / b.t}%;background:${b.c / b.t >= .7 ? "var(--good)" : "var(--accent)"}"></i></div><span class="mono" style="text-align:right">${b.c}/${b.t}</span></div>`).join("")}</div></div>` : ""}
+  <div class="row">${missed.length ? `<button class="btn primary" data-act="retry-missed">Retry ${missed.length} missed</button>` : ""}<button class="btn" data-act="again">${s.kind === "drill" ? "New set of 10" : "Practice again"}</button><a class="btn ghost" href="#home">Home</a></div>
+  ${missed.length ? `<div class="card stack"><span class="eyebrow">Review what you missed</span><div class="missed">${missed.map(({ it, k }) => `<div class="item"><b>${it.id ? it.id + " · " : ""}${esc(it.q)}</b><span>Your answer: ${s.picks[k] === null ? "<i>none</i>" : esc(it.o[s.picks[k]])}</span><span style="color:var(--good);font-weight:600">Correct: ${esc(it.o[it.a])}</span><span class="muted">${esc(it.x)}</span></div>`).join("")}</div></div>` : ""}</div>`;
+}
+
+/* ---------- EVENTS ---------- */
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const a = b.dataset.act, s = SESSION;
+  if (a === "quick") startSession({ title: "Quick 10, mixed", mode: "practice", kind: "bank", items: shuffle(QUESTIONS).slice(0, 10) });
+  else if (a === "missed") startSession({ title: "Missed questions", mode: "practice", kind: "bank", items: shuffle(missedIds()).map(id => QBYID[id]) });
+  else if (a === "practice-mod") { PSET.mods = new Set([b.dataset.m]); PSET.lessons.clear(); go("practice"); }
+  else if (a === "exam-mod") { const m = b.dataset.m; startSession({ title: `${m} · ${MOD[m].name}`, mode: "exam", kind: "bank", module: m, items: shuffle(QUESTIONS.filter(q => q.mod === m)) }); }
+  else if (a === "resume") go("quiz");
+  else if (a === "drill") startDrill(b.dataset.k);
+  else if (a === "topic") startTopic(b.dataset.l);
+  else if (a === "pm") { const m = b.dataset.m; PSET.mods.has(m) ? PSET.mods.delete(m) : PSET.mods.add(m); if (!PSET.mods.size) PSET.mods.add(m); viewPractice(); }
+  else if (a === "pl") { const l = b.dataset.l; PSET.lessons.has(l) ? PSET.lessons.delete(l) : PSET.lessons.add(l); viewPractice(); }
+  else if (a === "po") { PSET.only = b.dataset.k; viewPractice(); }
+  else if (a === "pc") { PSET.count = +b.dataset.n; viewPractice(); }
+  else if (a === "pstart") { const pool = shuffle(practicePool()); startSession({ title: "Practice set", mode: "practice", kind: "bank", items: PSET.count ? pool.slice(0, PSET.count) : pool }); }
+  else if (!s) return;
+  else if (a === "ans") answer(+b.dataset.oi);
+  else if (a === "play") { const it = s.items[s.i]; if (it.sound) playPattern(it.sound, $("#bigpat")); }
+  else if (a === "next") { if (s.mode === "practice" && s.i === s.items.length - 1) finish(); else { s.i = Math.min(s.items.length - 1, s.i + 1); viewQuiz(); window.scrollTo(0, 0); } }
+  else if (a === "prev") { s.i = Math.max(0, s.i - 1); viewQuiz(); }
+  else if (a === "goto") { s.i = +b.dataset.k; s.confirm = false; viewQuiz(); }
+  else if (a === "flag") { s.flags[s.i] = !s.flags[s.i]; viewQuiz(); }
+  else if (a === "submit") { s.confirm = true; viewQuiz(); }
+  else if (a === "submit-no") { s.confirm = false; viewQuiz(); }
+  else if (a === "submit-yes") finish();
+  else if (a === "quit") { const n = s.shown.filter(Boolean).length; if (n) { s.items = s.items.slice(0, n); s.picks = s.picks.slice(0, n); s.shown = s.shown.slice(0, n); finish(); } else go("home"); }
+  else if (a === "retry-missed") { const items = s.items.filter((it, k) => s.picks[k] !== it.a).map(({ order, ...rest }) => rest); startSession({ title: "Retry missed", mode: "practice", kind: s.kind, drill: s.drill, items }); }
+  else if (a === "again") { if (s.kind === "drill") startDrill(s.drill); else if (s.mode === "exam") startSession({ title: s.title, mode: "exam", kind: "bank", module: s.module, items: shuffle(QUESTIONS.filter(q => q.mod === s.module)) }); else startSession({ title: s.title, mode: "practice", kind: s.kind, items: shuffle(s.items.map(({ order, ...rest }) => rest)) }); }
+});
+document.addEventListener("keydown", e => {
+  if (route() !== "quiz" || !SESSION || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.target.closest("input,textarea,select")) return;
+  const s = SESSION, it = s.items[s.i], k = e.key.toLowerCase(), idx = "1234".indexOf(k) >= 0 ? "1234".indexOf(k) : "abcd".indexOf(k);
+  if (idx >= 0 && !s.shown[s.i]) { answer(it.order[idx]); e.preventDefault(); }
+  else if (k === "enter" && (s.shown[s.i] || s.mode === "exam") && !e.target.closest("button")) { const n = $('[data-act="next"]'); if (n) n.click(); }
+  else if (k === "arrowright" && s.mode === "exam" && s.i < s.items.length - 1) { s.i++; viewQuiz(); }
+  else if (k === "arrowleft" && s.mode === "exam" && s.i > 0) { s.i--; viewQuiz(); }
+});
+render();
+</script>
+</body></html>
