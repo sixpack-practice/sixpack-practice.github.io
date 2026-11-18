@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>[hidden]{display:none!important}body{margin:0}</style></head><body><title>Six-Pack Practice</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>[hidden]{display:none!important}body{margin:0}</style></head><body><title>OUPV/Six Pack</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,7 +11,7 @@
   --good:#17784A; --good-soft:#DDF2E6; --bad:#B8322A; --bad-soft:#F9E0DD;
   --port:#D02B2B; --stbd:#11884A; --chart:#1F5D86;
   --m100:#C2410C; --m170:#A16207; --m171:#0F7A5A; --m172:#1D5F8C;
-  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --display:"Barlow Condensed","Avenir Next Condensed","Arial Narrow",system-ui,sans-serif;
   --body:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
   --radius:10px;
@@ -166,6 +166,7 @@ main{max-width:1080px;margin:0 auto;padding-block:28px 64px;padding-left:max(16p
 .navgrid button.w{background:var(--bad-soft);border-color:var(--bad)}
 .visual{border-radius:10px;overflow:hidden;background:var(--surface-2)}
 .visual svg{display:block;width:100%;height:auto;max-height:340px}
+.visual .btn svg{width:18px;height:18px;display:inline}
 .confirm{border:1.5px solid var(--accent);background:var(--accent-soft);border-radius:10px;padding:14px 16px}
 
 /* results */
@@ -214,6 +215,7 @@ input[type=number],input[type=time]{font:inherit;font-family:var(--mono);padding
 .foot-note{font-size:.85rem;color:var(--muted);max-width:75ch}
 .scene{display:block}
 .empty{padding:28px;text-align:center;color:var(--muted)}
+@media (hover:none){.kbd-hint{display:none}}
 .kbd{font-family:var(--mono);font-size:.78rem;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 
@@ -242,9 +244,9 @@ svg .t-acc{fill:var(--accent)}
 </svg>
 
 <header class="top"><div class="top-in">
-  <a class="brand" href="#home" aria-label="Six-Pack Practice home">
+  <a class="brand" href="#home" aria-label="OUPV/Six Pack home">
     <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" style="fill:var(--ink)"/><circle cx="20" cy="20" r="12.5" fill="none" style="stroke:var(--paper)" stroke-width="1.2"/><path d="M20 4 L23 20 L20 36 L17 20Z" style="fill:var(--paper)"/><path d="M20 4 L23 20 L17 20Z" style="fill:var(--accent)"/><path d="M4 20 L20 17.5 L36 20 L20 22.5Z" style="fill:var(--paper)" opacity=".55"/></svg>
-    <span><b>Six-Pack Practice</b><small>OUPV · Near Coastal</small></span>
+    <span><b>OUPV/Six Pack</b><small>Near Coastal exam prep</small></span>
   </a>
   <nav class="nav" id="nav"></nav>
 </div></header>
@@ -614,7 +616,7 @@ D.stability = () => {
 D.compass = () => {
   let s = `<svg viewBox="0 0 360 200" role="img" aria-label="True, variation, magnetic, deviation, compass">`;
   const items = [["T", "True"], ["V", "Variation"], ["M", "Magnetic"], ["D", "Deviation"], ["C", "Compass"]];
-  items.forEach((it, i) => { const x = 14 + i * 70; s += `<rect x="${x}" y="40" width="58" height="58" rx="8" class="${i % 2 ? "s-surface" : "s-ink"}" style="stroke:var(--ink)" stroke-width="1.5"/><text x="${x + 29}" y="80" text-anchor="middle" font-size="26" font-weight="700" font-family="Barlow Condensed, sans-serif" style="fill:${i % 2 ? "var(--ink)" : "var(--paper)"}">${it[0]}</text>` + T(x + 29, 116, it[1], "t-small", 'text-anchor="middle"'); });
+  items.forEach((it, i) => { const x = 14 + i * 70; s += `<rect x="${x}" y="40" width="58" height="58" rx="8" class="${i % 2 ? "s-surface" : "s-ink"}" style="stroke:var(--ink)" stroke-width="1.5"/><text x="${x + 29}" y="80" text-anchor="middle" font-size="26" font-weight="700" font-family="Barlow Condensed, Avenir Next Condensed, sans-serif" style="fill:${i % 2 ? "var(--ink)" : "var(--paper)"}">${it[0]}</text>` + T(x + 29, 116, it[1], "t-small", 'text-anchor="middle"'); });
   s += `<path d="M20,140 L340,140" class="l-acc" stroke-width="2.5" marker-end="url(#ah-acc)"/>` + T(20, 160, "T → C (down): add West, subtract East", "t-lab t-acc");
   s += `<path d="M340,178 L20,178" class="l-chart" stroke-width="2.5" marker-end="url(#ah-chart)"/>` + T(340, 196, "C → T (up): add East (\"correcting add East\")", "t-lab", 'text-anchor="end" style="fill:var(--chart)"');
   s += T(14, 24, "True Virgins Make Dull Companions", "t-lab");
@@ -717,7 +719,7 @@ function currentSVG(h, sp, set, dr) {
 D.eta = () => {
   let s = `<svg viewBox="0 0 360 210" role="img" aria-label="Distance, speed, time triangle">`;
   s += `<polygon points="110,18 200,170 20,170" class="s-surface" style="stroke:var(--ink)" stroke-width="2"/><line x1="56" y1="108" x2="164" y2="108" class="l-ink" stroke-width="2"/><line x1="110" y1="108" x2="110" y2="170" class="l-ink" stroke-width="2"/>`;
-  s += `<text x="110" y="88" text-anchor="middle" font-size="30" font-weight="700" font-family="Barlow Condensed, sans-serif" style="fill:var(--accent)">D</text><text x="78" y="152" text-anchor="middle" font-size="26" font-weight="700" font-family="Barlow Condensed, sans-serif">S</text><text x="142" y="152" text-anchor="middle" font-size="26" font-weight="700" font-family="Barlow Condensed, sans-serif">T</text>`;
+  s += `<text x="110" y="88" text-anchor="middle" font-size="30" font-weight="700" font-family="Barlow Condensed, Avenir Next Condensed, sans-serif" style="fill:var(--accent)">D</text><text x="78" y="152" text-anchor="middle" font-size="26" font-weight="700" font-family="Barlow Condensed, Avenir Next Condensed, sans-serif">S</text><text x="142" y="152" text-anchor="middle" font-size="26" font-weight="700" font-family="Barlow Condensed, Avenir Next Condensed, sans-serif">T</text>`;
   s += T(222, 50, "D = S × T", "t-mono") + T(222, 74, "S = D ÷ T", "t-mono") + T(222, 98, "T = D ÷ S", "t-mono");
   s += T(222, 132, "nm · knots · hours", "t-small") + T(222, 156, "6-minute rule:", "t-lab") + T(222, 172, "6 min run = speed ÷ 10", "t-small");
   s += T(20, 200, "Cover the one you want; the other two show the math.", "t-small");
@@ -923,6 +925,7 @@ function render() {
   else if (r === "practice") viewPractice();
   else if (r === "exam") viewExam();
   else if (r === "drills") viewDrills();
+  else if (r.startsWith("drill-") && DRILLS[r.slice(6)]) startDrill(r.slice(6));
   else if (r === "quiz" && SESSION) viewQuiz();
   else if (r === "results" && SESSION && SESSION.result) viewResults();
   else viewHome();
@@ -955,7 +958,7 @@ function viewHome() {
   <p class="foot-note" style="margin-top:14px">${seen} of ${tot} questions tried so far.</p></div>${heroArt()}</section>
   <section class="stack"><div class="row" style="justify-content:space-between"><h2>Your four exam modules</h2><span class="muted" style="font-size:.9rem">Bar marker = official pass mark</span></div><div class="grid g4">${Object.keys(MOD).map(modCard).join("")}</div></section>
   <section class="stack"><h2>Visual drills</h2><div class="grid g3">${drillCards(["lights", "sounds", "buoys"])}</div></section>
-  <p class="foot-note">Independent study aid built from the 2026 app-ready study book. The practice questions are original study items, not official Coast Guard exam questions, and studying here doesn't count as a USCG-approved course. Real Q172 plotting needs the official training chart, dividers and a plotter. Progress is saved in this browser only.</p>`;
+  <p class="foot-note">Independent study aid built from the 2026 app-ready study book. The practice questions are original study items, not official Coast Guard exam questions, and studying here doesn't count as a USCG-approved course. Real Q172 plotting needs the official training chart, dividers and a plotter. Progress is saved on this device only.</p>`;
 }
 function drillCards(keys) { return keys.map(k => `<button class="card drill" data-act="drill" data-k="${k}"><div class="art">${DRILLS[k].art()}</div><div class="txt"><h3>${DRILLS[k].title}</h3><p class="muted">${DRILLS[k].sub}</p></div></button>`).join(""); }
 function viewLearn() {
@@ -981,7 +984,7 @@ function quickCheck(el, q) {
   const order = shuffle([0, 1, 2, 3]);
   el.innerHTML = `<span class="eyebrow">Quick check · ${q.id}</span><p class="stem" style="font-size:1.08rem">${esc(q.q)}</p><div class="opts">${order.map((oi, k) => `<button class="opt" data-oi="${oi}"><span class="k">${"ABCD"[k]}</span><span>${esc(q.o[oi])}</span></button>`).join("")}</div><div id="qc-fb"></div>`;
   el.addEventListener("click", e => {
-    const b = e.target.closest(".opt"); if (!b || b.disabled) return; const oi = +b.dataset.oi, ok = oi === q.a; record(q.id, ok); save();
+    const b = e.target.closest(".opt"); if (!b || b.disabled) return; const oi = +b.dataset.oi, ok = oi === q.a; record(q.id, ok); save(); haptic(ok ? "success" : "error");
     $$(".opt", el).forEach(x => { x.disabled = true; if (+x.dataset.oi === q.a) x.classList.add("right"); else if (x === b) x.classList.add("wrong"); });
     $("#qc-fb", el).innerHTML = `<div class="feedback ${ok ? "ok" : "no"}"><b>${ok ? "Correct" : "Not quite"}</b><span>${esc(q.x)}</span></div>`;
   });
@@ -1027,7 +1030,7 @@ function viewQuiz() {
   const last = s.i === s.items.length - 1;
   let nav;
   if (exam) nav = `<div class="qnav"><button class="btn" data-act="prev" ${s.i ? "" : "disabled"}>${IC.back} Previous</button><button class="btn ghost" data-act="flag">${IC.flag} ${s.flags[s.i] ? "Unflag" : "Flag"}</button>${last ? `<button class="btn primary" data-act="submit">Submit exam</button>` : `<button class="btn primary" data-act="next">Next ${IC.arrow}</button>`}</div>`;
-  else nav = `<div class="qnav"><button class="btn ghost" data-act="quit">End session</button>${shown ? `<button class="btn primary" data-act="next" id="nextbtn">${last ? "See results" : "Next question"} ${IC.arrow}</button>` : `<span class="muted" style="align-self:center;font-size:.9rem">Pick an answer · keys <span class="kbd">1</span>–<span class="kbd">4</span></span>`}</div>`;
+  else nav = `<div class="qnav"><button class="btn ghost" data-act="quit">End session</button>${shown ? `<button class="btn primary" data-act="next" id="nextbtn">${last ? "See results" : "Next question"} ${IC.arrow}</button>` : `<span class="muted" style="align-self:center;font-size:.9rem">Pick an answer<span class="kbd-hint"> · keys <span class="kbd">1</span>–<span class="kbd">4</span></span></span>`}</div>`;
   const confirm = exam && s.confirm ? `<div class="confirm stack"><b>Submit now?</b><span>${answered} of ${s.items.length} answered${s.items.length - answered ? `; ${s.items.length - answered} unanswered will count as wrong` : ""}.</span><div class="row"><button class="btn primary" data-act="submit-yes">Submit and score</button><button class="btn" data-act="submit-no">Keep working</button></div></div>` : "";
   const grid = exam ? `<details class="card" ${s.items.length <= 10 ? "open" : ""}><summary style="cursor:pointer;font-weight:600">Question map · ${answered}/${s.items.length} answered</summary><div class="navgrid" style="margin-top:12px">${s.items.map((_, k) => `<button data-act="goto" data-k="${k}" class="${s.picks[k] !== null ? "done" : ""} ${k === s.i ? "cur" : ""} ${s.flags[k] ? "flag" : ""}">${k + 1}</button>`).join("")}</div></details>` : "";
   app.innerHTML = `<div class="quiz"><div class="qtop"><h3>${esc(s.title)}</h3>${exam ? '<span class="chip">Exam mode</span>' : ""}<span class="count">${s.i + 1} / ${s.items.length}</span></div><div class="progress"><i style="width:${100 * (exam ? answered : s.i + (shown ? 1 : 0)) / s.items.length}%"></i></div>
@@ -1041,8 +1044,10 @@ function answer(oi) {
   if (s.shown[s.i]) return;
   s.picks[s.i] = oi; s.shown[s.i] = true; const ok = oi === it.a;
   if (it.id) record(it.id, ok); else if (s.drill) { const r = S.drills[s.drill] || (S.drills[s.drill] = { c: 0, w: 0 }); ok ? r.c++ : r.w++; }
-  save(); viewQuiz();
+  haptic(ok ? "success" : "error"); save(); viewQuiz();
 }
+/* native iOS shell: haptic feedback (no-op in a browser) */
+function haptic(kind) { try { window.webkit.messageHandlers.haptic.postMessage(kind); } catch (e) {} }
 function finish() {
   const s = SESSION; stopSound();
   if (s.mode === "exam") s.items.forEach((it, k) => record(it.id, s.picks[k] === it.a));
@@ -1053,7 +1058,7 @@ function finish() {
 }
 function ring(p, ok) {
   const r = 54, c = 2 * Math.PI * r;
-  return `<svg class="ring" viewBox="0 0 132 132" aria-hidden="true"><circle cx="66" cy="66" r="${r}" fill="none" style="stroke:var(--surface-2)" stroke-width="12"/><circle cx="66" cy="66" r="${r}" fill="none" style="stroke:${ok ? "var(--good)" : "var(--accent)"}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${c * p} ${c}" transform="rotate(-90 66 66)"/><text x="66" y="74" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-size="30" font-weight="700">${Math.round(p * 100)}%</text></svg>`;
+  return `<svg class="ring" viewBox="0 0 132 132" aria-hidden="true"><circle cx="66" cy="66" r="${r}" fill="none" style="stroke:var(--surface-2)" stroke-width="12"/><circle cx="66" cy="66" r="${r}" fill="none" style="stroke:${ok ? "var(--good)" : "var(--accent)"}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${c * p} ${c}" transform="rotate(-90 66 66)"/><text x="66" y="74" text-anchor="middle" font-family="Barlow Condensed, Avenir Next Condensed, sans-serif" font-size="30" font-weight="700">${Math.round(p * 100)}%</text></svg>`;
 }
 function viewResults() {
   const s = SESSION, R = s.result, exam = s.mode === "exam", M = exam ? MOD[s.module] : null, pass = exam ? R.correct >= M.pass : R.correct / R.total >= .7;

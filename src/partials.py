@@ -31,14 +31,14 @@ DEFS='''<svg width="0" height="0" style="position:absolute" aria-hidden="true"><
 def header(home=True):
     p = '' if home else 'index.html'
     return f'''<header class="top"><div class="wrap">
-<a class="brand" href="{{{{ROOT}}}}index.html" aria-label="Six-Pack Practice home">{LOGO}<b>Six-Pack Practice</b></a>
+<a class="brand" href="{{{{ROOT}}}}index.html" aria-label="OUPV/Six Pack home">{LOGO}<b>OUPV/Six Pack</b></a>
 <nav aria-label="Sections"><a href="{p}#features">Features</a><a href="{p}#how">How it works</a><a href="{p}#faq">FAQ</a></nav>
 <a class="btn primary" href="{{{{ROOT}}}}app/">Open the app</a>
 </div></header>
 '''
 FOOTER='''<footer><div class="wrap">
 <div class="links"><a href="{{ROOT}}app/">Open the app</a><a href="{{ROOT}}support.html">Support</a><a href="{{ROOT}}privacy.html">Privacy</a></div>
-<p>Six-Pack Practice is an independent study aid for the U.S. Coast Guard OUPV (six-pack) Near Coastal exam. It is not made by, approved by or affiliated with the U.S. Coast Guard. Practice questions are original study items, not official exam questions, and using this app does not replace a USCG-approved course.</p>
-<p>© 2026 Six-Pack Practice</p>
+<p>OUPV/Six Pack is an independent study aid for the U.S. Coast Guard OUPV (six-pack) Near Coastal exam. It is not made by, approved by or affiliated with the U.S. Coast Guard. Practice questions are original study items, not official exam questions, and using this app does not replace a USCG-approved course.</p>
+<p>© 2026 OUPV/Six Pack</p>
 </div></footer>
 '''
